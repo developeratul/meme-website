@@ -1,0 +1,49 @@
+{
+  "name": "meme-site",
+  "version": "1.0.0",
+  "description": "A simple meme wesbite created using the MERN stacl",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "nodemon src/index.ts",
+    "build": "ts-node -p ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ratul-devR/meme-website.git"
+  },
+  "keywords": [
+    "MEME",
+    "website",
+    "MERN",
+    "ratul-devr",
+    "React",
+    "Node",
+    "Express"
+  ],
+  "author": "Developer Ratul",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ratul-devR/meme-website/issues"
+  },
+  "homepage": "https://github.com/ratul-devR/meme-website#readme",
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.5",
+    "@types/mongoose": "^5.11.97",
+    "dotenv": "^10.0.0",
+    "nodemon": "^2.0.12",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.2"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "cloudinary": "^1.26.3",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.4"
+  }
+}
