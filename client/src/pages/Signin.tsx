@@ -6,12 +6,78 @@ import {
   useColorModeValue,
   InputGroup,
   InputLeftAddon,
+  useToast,
 } from "@chakra-ui/react";
+import { ChangeEvent, useState } from "react";
+import { useHistory } from "react-router";
+import validator from "validator";
 
 // the signin page
 const Signin = () => {
+  const [input, setInput] = useState({ email: "", password: "" });
+  const [pending, setPending] = useState(false);
+  const { email, password } = input;
+  const toast = useToast({
+    position: "top",
+    status: "error",
+    title: "Error",
+    variant: "solid",
+    isClosable: true,
+  });
+  const history = useHistory();
+
   const formBackground = useColorModeValue("gray.50", "gray.700");
   const formVariant = useColorModeValue("outline", "filled");
+
+  // Handling the input change
+  function HandleInputChange(event: ChangeEvent<HTMLInputElement>) {
+    const { name, value } = event.target;
+    setInput((pre) => ({ ...pre, [name]: value }));
+  }
+
+  // for signing in the user with current information's stored in the input state
+  async function signinUser() {
+    toast({ status: "info", title: "Info", description: "Working on it..." });
+    setPending(true);
+
+    try {
+      const res = await fetch("/auth/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const body = await res.json();
+
+      if (res.ok) {
+        setPending(false);
+        history.push("/");
+        toast({ status: "success", title: "Success", description: body.message });
+      } else if (res.status === 400) {
+        setPending(false);
+        toast({ description: body.message });
+      }
+    } catch (err: any) {
+      setPending(false);
+      toast({ title: "Error", description: err.message });
+    }
+  }
+
+  // for validating the input information's when user clicks on the signin button
+  function ValidateInputInfos() {
+    const validations = {
+      allFields: email && password,
+      emailValid: validator.isEmail(email),
+    };
+    const { allFields, emailValid } = validations;
+
+    if (!allFields) {
+      toast({ description: "Please fill all the field properly" });
+    } else if (!emailValid) {
+      toast({ description: "Your email is invalid" });
+    } else if (allFields && emailValid) {
+      signinUser();
+    }
+  }
 
   return (
     <div className="signup_page">
@@ -23,14 +89,35 @@ const Signin = () => {
 
           <InputGroup>
             <InputLeftAddon children={<i className="far fa-envelope"></i>} />
-            <Input variant={formVariant} type="email" placeholder="Enter your email" mb={3} />
+            <Input
+              name="email"
+              value={email}
+              onChange={HandleInputChange}
+              variant={formVariant}
+              type="email"
+              placeholder="Enter your email"
+              mb={3}
+            />
           </InputGroup>
           <InputGroup>
             <InputLeftAddon children={<i className="fas fa-key"></i>} />
-            <Input variant={formVariant} type="password" placeholder="Enter your password" mb={3} />
+            <Input
+              name="password"
+              onChange={HandleInputChange}
+              value={password}
+              variant={formVariant}
+              type="password"
+              placeholder="Enter your password"
+              mb={3}
+            />
           </InputGroup>
 
-          <Button fontWeight="normal" colorScheme="teal">
+          <Button
+            disabled={pending}
+            onClick={ValidateInputInfos}
+            fontWeight="normal"
+            colorScheme="teal"
+          >
             Sign in
           </Button>
         </Flex>

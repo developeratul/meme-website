@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import bcrypt from "bcrypt";
 
 import User from "../models/user";
 
@@ -24,4 +25,29 @@ async function singnup(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export { singnup };
+async function signin(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { email, password } = req.body;
+
+    const user = (await User.findOne({ email })) || null;
+
+    if (!user) {
+      res.status(400).json({ message: "Your account doesn't exists" });
+    } else {
+      const passwordMatched = await bcrypt.compare(password, user.password);
+
+      if (!passwordMatched) {
+        res.status(400).json({ message: "Invalid credentials" });
+      } else {
+        const authToken = await user.generateWebToken();
+
+        res.cookie("jwt", authToken);
+        res.status(200).json({ message: `Welcome back ${user.name}` });
+      }
+    }
+  } catch (err: any) {
+    next({ message: err.message || err });
+  }
+}
+
+export { singnup, signin };

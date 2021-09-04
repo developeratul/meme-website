@@ -1,4 +1,4 @@
-import { IconButton, Heading, useColorMode, Tooltip, Flex } from "@chakra-ui/react";
+import { IconButton, Heading, useColorMode, Tooltip } from "@chakra-ui/react";
 import { useRef } from "react";
 import { Link, NavLink } from "react-router-dom";
 

@@ -14,7 +14,7 @@ interface User extends mongoose.Document {
 const dataSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  password: { type: String, required: true, trim: true },
   portfolio: { type: String, required: true },
   time: { type: Number, required: true, default: Date.now() },
   tokens: [{ token: String }],

@@ -21,6 +21,7 @@ const Signup = () => {
     confirmPassword: "",
     portfolio: "",
   });
+  const [pending, setPending] = useState(false);
   const { name, email, password, confirmPassword, portfolio } = input;
   const toast = useToast({ position: "top", isClosable: true, variant: "solid", status: "error" });
   const history = useHistory();
@@ -37,6 +38,7 @@ const Signup = () => {
   // for signing up a new user with current information's in the input state
   async function signupUser() {
     toast({ title: "info", description: "working on it", status: "info" });
+    setPending(true);
 
     try {
       const res = await fetch("/auth/signup", {
@@ -49,15 +51,18 @@ const Signup = () => {
 
       if (res.ok) {
         history.push("/");
+        setPending(false);
         toast({
           title: "success",
           description: body.message,
           status: "success",
         });
       } else if (res.status === 400) {
-        toast({ description: body.message, status: "error" });
+        setPending(false);
+        toast({ description: body.message, status: "error", title: "Error" });
       }
     } catch (err: any) {
+      setPending(false);
       toast({ description: err.message || err });
     }
   }
@@ -73,13 +78,13 @@ const Signup = () => {
     const { allFields, emailOk, passwordLength, passwordMatched } = validations;
 
     if (!allFields) {
-      toast({ title: "Error", description: "please fill all the field properly" });
+      toast({ title: "Error", description: "please fill all the field's properly" });
     } else if (!emailOk) {
       toast({ title: "Error", description: "Your email is invalid" });
     } else if (!passwordLength) {
       toast({ title: "Error", description: "password must have 8 chars" });
     } else if (!passwordMatched) {
-      toast({ title: "Error", description: "password doesn't matched" });
+      toast({ title: "Error", description: "make sure password's are matching" });
     } else if (allFields && passwordMatched) {
       signupUser();
     }
@@ -154,7 +159,12 @@ const Signup = () => {
             />
           </InputGroup>
 
-          <Button onClick={ValidateInputInfos} fontWeight="normal" colorScheme="teal">
+          <Button
+            disabled={pending}
+            onClick={ValidateInputInfos}
+            fontWeight="normal"
+            colorScheme="teal"
+          >
             Sign up
           </Button>
         </Flex>
