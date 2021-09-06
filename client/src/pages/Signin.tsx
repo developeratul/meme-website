@@ -8,14 +8,16 @@ import {
   InputLeftAddon,
   useToast,
 } from "@chakra-ui/react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import { useHistory } from "react-router";
 import validator from "validator";
+import { AuthContext } from "../providers/AuthProvider";
 
 // the signin page
 const Signin = () => {
   const [input, setInput] = useState({ email: "", password: "" });
   const [pending, setPending] = useState(false);
+  const { dispatch } = useContext(AuthContext);
   const { email, password } = input;
   const toast = useToast({
     position: "top",
@@ -50,6 +52,7 @@ const Signin = () => {
 
       if (res.ok) {
         setPending(false);
+        dispatch({ type: "LOGIN", payload: body.user });
         history.push("/");
         toast({ status: "success", title: "Success", description: body.message });
       } else if (res.status === 400) {
@@ -82,7 +85,14 @@ const Signin = () => {
   return (
     <div className="signup_page">
       <Flex marginY="50" marginX="5px" justifyContent="center" alignItems="center">
-        <Flex width="400px" direction="column" background={formBackground} p={10} rounded={5}>
+        <Flex
+          boxShadow="lg"
+          width="400px"
+          direction="column"
+          background={formBackground}
+          p={[5, 10, 10, 10]}
+          rounded={5}
+        >
           <Heading color="teal" textAlign="center" mb={5} fontSize="xx-large">
             Sign in
           </Heading>

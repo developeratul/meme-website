@@ -1,12 +1,18 @@
-import { IconButton, Heading, useColorMode, Tooltip } from "@chakra-ui/react";
-import { useRef } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { IconButton, Heading, useColorMode, Tooltip, Avatar, useToast } from "@chakra-ui/react";
+import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
+import { useContext, useRef } from "react";
+import { Link, NavLink, useHistory } from "react-router-dom";
+import { AuthContext } from "../../providers/AuthProvider";
 
 // the global nav bar
 const Nav = () => {
   const { toggleColorMode, colorMode } = useColorMode();
+  const { state, dispatch } = useContext(AuthContext);
+  const toast = useToast({ position: "top", variant: "solid", isClosable: true });
+  const { user } = state;
   const barsRef = useRef<HTMLDivElement>(null);
   const listNavRef = useRef<HTMLUListElement>(null);
+  const history = useHistory();
 
   function ToggleNav() {
     const bars = barsRef.current;
@@ -16,6 +22,22 @@ const Nav = () => {
       listNav.classList.toggle("nav-active");
       bars.classList.toggle("toggle");
     }
+  }
+
+  async function LogoutUser() {
+    try {
+      const res = await fetch("/auth/logout", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const body = await res.json();
+
+      if (res.ok) {
+        dispatch({ type: "LOGOUT" });
+        history.push("/");
+        toast({ title: body.message, status: "success" });
+      }
+    } catch (err) {}
   }
 
   return (
@@ -30,16 +52,36 @@ const Nav = () => {
             Home
           </NavLink>
         </li>
-        <li>
-          <NavLink activeClassName="nav_link_active" to="/signup">
-            Sign up
-          </NavLink>
-        </li>
-        <li>
-          <NavLink activeClassName="nav_link_active" to="/signin">
-            Sign in
-          </NavLink>
-        </li>
+        {state.isAuthenticated && user ? (
+          <>
+            <li>
+              <Menu>
+                <MenuButton>
+                  <Avatar size="sm" src={user.photoUrl} name={user.name} />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem as={Link} to={`/profile/${user._id}`}>
+                    View Profile
+                  </MenuItem>
+                  <MenuItem onClick={LogoutUser}>Log into another account</MenuItem>
+                </MenuList>
+              </Menu>
+            </li>
+          </>
+        ) : (
+          <>
+            <li>
+              <NavLink activeClassName="nav_link_active" to="/signup">
+                Sign up
+              </NavLink>
+            </li>
+            <li>
+              <NavLink activeClassName="nav_link_active" to="/signin">
+                Sign in
+              </NavLink>
+            </li>
+          </>
+        )}
         <li>
           <Tooltip
             hasArrow

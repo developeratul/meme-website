@@ -19,7 +19,7 @@ async function singnup(req: Request, res: Response, next: NextFunction) {
     await newUser.save();
 
     res.cookie("jwt", authToken, { maxAge: 2592000000 });
-    res.status(200).json({ message: "We have created an account for you!" });
+    res.status(200).json({ message: "We have created an account for you!", user: newUser });
   } catch (err: any) {
     next({ status: 500, message: err.message });
   }
@@ -42,7 +42,7 @@ async function signin(req: Request, res: Response, next: NextFunction) {
         const authToken = await user.generateWebToken();
 
         res.cookie("jwt", authToken);
-        res.status(200).json({ message: `Welcome back ${user.name}` });
+        res.status(200).json({ message: `Welcome back ${user.name}`, user });
       }
     }
   } catch (err: any) {
@@ -50,4 +50,24 @@ async function signin(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export { singnup, signin };
+function checkAuth(req: any, res: Response, next: NextFunction) {
+  try {
+    const { user } = req;
+    res.status(200).json({ user });
+  } catch (err: any) {
+    next({ message: err.message || err });
+  }
+}
+
+async function logout(req: any, res: Response, next: NextFunction) {
+  try {
+    req.user.tokens = req.user.tokens.filter(({ token }: { token: string }) => token !== req.token);
+    res.clearCookie("jwt");
+    await req.user.save();
+    res.status(200).json({ message: `Logged out as ${req.user.name}` });
+  } catch (err: any) {
+    next({ message: err.message || err });
+  }
+}
+
+export { singnup, signin, checkAuth, logout };

@@ -2,12 +2,14 @@ import "dotenv/config";
 import express, { Application } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 // middlewares
 import { notFoundHandler, errorHandler } from "./middlewares/errorHandler";
 
 // routers
 import authRouter from "./routes/authRouter";
+import memeRouter from "./routes/memeRouter";
 
 const app: Application = express();
 const port: string | number = process.env.PORT || 8000;
@@ -16,6 +18,7 @@ const port: string | number = process.env.PORT || 8000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors({ origin: ["http://localhost:3000"] }));
+app.use(cookieParser());
 
 // Database connection
 const connectionString: string = process.env.DB_URL || "";
@@ -26,6 +29,7 @@ mongoose
 
 // application routes
 app.use("/auth", authRouter);
+app.use("/meme", memeRouter);
 
 // error handlings
 app.use(notFoundHandler);

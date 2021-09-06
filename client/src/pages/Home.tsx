@@ -1,9 +1,14 @@
+import { Grid } from "@chakra-ui/react";
+import CreateMeme from "../components/home/CreateMeme";
+import SearchMeme from "../components/home/SearchMeme";
+
 // the home page
 const Home = () => {
   return (
-    <div>
-      <h1>Home page</h1>
-    </div>
+    <Grid>
+      <SearchMeme />
+      <CreateMeme />
+    </Grid>
   );
 };
 

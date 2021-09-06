@@ -8,9 +8,10 @@ import {
   InputLeftAddon,
   useToast,
 } from "@chakra-ui/react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 import { useHistory } from "react-router";
 import validator from "validator";
+import { AuthContext } from "../providers/AuthProvider";
 
 // the signup page
 const Signup = () => {
@@ -22,6 +23,7 @@ const Signup = () => {
     portfolio: "",
   });
   const [pending, setPending] = useState(false);
+  const { dispatch } = useContext(AuthContext);
   const { name, email, password, confirmPassword, portfolio } = input;
   const toast = useToast({ position: "top", isClosable: true, variant: "solid", status: "error" });
   const history = useHistory();
@@ -51,6 +53,7 @@ const Signup = () => {
 
       if (res.ok) {
         history.push("/");
+        dispatch({ type: "LOGIN", payload: body.user });
         setPending(false);
         toast({
           title: "success",
@@ -93,7 +96,14 @@ const Signup = () => {
   return (
     <div className="signup_page">
       <Flex marginY="50" marginX="5px" justifyContent="center" alignItems="center">
-        <Flex width="1xl" direction="column" background={formBackground} p={10} rounded={5}>
+        <Flex
+          boxShadow="lg"
+          width="400px"
+          direction="column"
+          background={formBackground}
+          p={[5, 10, 10, 10]}
+          rounded={5}
+        >
           <Heading color="teal" textAlign="center" mb={5} fontSize="xx-large">
             Sign up
           </Heading>

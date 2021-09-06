@@ -5,7 +5,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Poppins;
+  font-family: Poppins, Roboto, sans-serif;
   text-decoration: none;
   outline: none;
   font-weight: normal;
@@ -34,7 +34,7 @@ nav {
   z-index: 5;
   .nav_title {
     a {
-      font-family: Josefin sans;
+      font-family: Josefin sans, Roboto, sans-serif;
     }
   }
 
@@ -63,9 +63,24 @@ nav.light {
   box-shadow: 0 0 5px #a0aec079;
 }
 
+.container {
+  width: 100px;
+  margin: auto;
+}
+
+@media screen and (max-width: 1024px) {
+  .container {
+    width: 700px;
+  }
+}
+
 @media screen and (max-width: 768px) {
   * {
     cursor: default !important;
+  }
+
+  .container {
+    width: 95%;
   }
 
   nav {

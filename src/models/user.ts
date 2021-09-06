@@ -2,12 +2,13 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-interface User extends mongoose.Document {
+export interface User extends mongoose.Document {
   name: string;
   email: string;
   password: string;
   portfolio: string;
   time: number;
+  photoUrl: string;
   generateWebToken: () => "";
 }
 
@@ -17,6 +18,8 @@ const dataSchema = new mongoose.Schema({
   password: { type: String, required: true, trim: true },
   portfolio: { type: String, required: true },
   time: { type: Number, required: true, default: Date.now() },
+  photoUrl: { type: String },
+  memes: [{ type: mongoose.Types.ObjectId }],
   tokens: [{ token: String }],
 });
 
