@@ -16,7 +16,7 @@ const config = {
     sm: "414px",
     md: "768px",
     lg: "1024px",
-    xl: "1280",
+    xl: "1280px",
   }),
 };
 const theme = extendTheme({ config });

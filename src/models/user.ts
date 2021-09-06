@@ -19,7 +19,7 @@ const dataSchema = new mongoose.Schema({
   portfolio: { type: String, required: true },
   time: { type: Number, required: true, default: Date.now() },
   photoUrl: { type: String },
-  memes: [{ type: mongoose.Types.ObjectId }],
+  memes: [{ type: mongoose.Types.ObjectId, ref: "Meme" }],
   tokens: [{ token: String }],
 });
 
