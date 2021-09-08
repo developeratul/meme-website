@@ -1,14 +1,17 @@
 import { Flex } from "@chakra-ui/layout";
 import { Spinner } from "@chakra-ui/spinner";
 import { useContext, useEffect, useState } from "react";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
+
+import { AuthContext } from "./providers/AuthProvider";
+
 import Nav from "./components/global/Nav";
 
 // pages
 import Home from "./pages/Home";
+import Profile from "./pages/Profile";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
-import { AuthContext } from "./providers/AuthProvider";
 
 const App = () => {
   const [pending, setPending] = useState(true);
@@ -60,8 +63,10 @@ const App = () => {
       <Nav />
       <Switch>
         <Route path="/" exact component={Home} />
+        <Route path="/profile/:id" component={Profile} />
         <Route path="/signin" component={Signin} />
         <Route path="/signup" component={Signup} />
+        <Redirect to="/" />
       </Switch>
     </BrowserRouter>
   );

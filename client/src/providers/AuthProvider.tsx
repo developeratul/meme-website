@@ -1,15 +1,5 @@
 import React, { createContext, useReducer } from "react";
-
-// the user interface which will be used in initialState.user
-interface User {
-  _id: string;
-  name: string;
-  email: string;
-  password: string;
-  portfolio: string;
-  photoUrl: string;
-  time: number;
-}
+import { User } from "../interfaces";
 
 // interface for the initial state which will be used in the reducer
 interface initialStateInterface {

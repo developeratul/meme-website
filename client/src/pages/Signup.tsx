@@ -6,11 +6,11 @@ import {
   useColorModeValue,
   InputGroup,
   InputLeftAddon,
-  useToast,
 } from "@chakra-ui/react";
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import validator from "validator";
+import useToast from "../components/hooks/useToast";
 import { AuthContext } from "../providers/AuthProvider";
 
 // the signup page
@@ -25,7 +25,7 @@ const Signup = () => {
   const [pending, setPending] = useState(false);
   const { dispatch } = useContext(AuthContext);
   const { name, email, password, confirmPassword, portfolio } = input;
-  const toast = useToast({ position: "top", isClosable: true, variant: "solid", status: "error" });
+  const toast = useToast();
   const history = useHistory();
 
   const formBackground = useColorModeValue("gray.50", "gray.700");
@@ -55,14 +55,10 @@ const Signup = () => {
         history.push("/");
         dispatch({ type: "LOGIN", payload: body.user });
         setPending(false);
-        toast({
-          title: "success",
-          description: body.message,
-          status: "success",
-        });
+        toast({ description: body.message, status: "success" });
       } else if (res.status === 400) {
         setPending(false);
-        toast({ description: body.message, status: "error", title: "Error" });
+        toast({ description: body.message, status: "error" });
       }
     } catch (err: any) {
       setPending(false);
@@ -81,17 +77,21 @@ const Signup = () => {
     const { allFields, emailOk, passwordLength, passwordMatched } = validations;
 
     if (!allFields) {
-      toast({ title: "Error", description: "please fill all the field's properly" });
+      toast({ status: "error", description: "please fill all the field's properly" });
     } else if (!emailOk) {
-      toast({ title: "Error", description: "Your email is invalid" });
+      toast({ status: "error", description: "Your email is invalid" });
     } else if (!passwordLength) {
-      toast({ title: "Error", description: "password must have 8 chars" });
+      toast({ status: "error", description: "password must have 8 chars" });
     } else if (!passwordMatched) {
-      toast({ title: "Error", description: "make sure password's are matching" });
+      toast({ status: "error", description: "make sure password's are matching" });
     } else if (allFields && passwordMatched) {
       signupUser();
     }
   }
+
+  useEffect(() => {
+    document.title = "MEME Site / Signup";
+  }, []);
 
   return (
     <div className="signup_page">

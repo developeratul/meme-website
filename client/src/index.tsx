@@ -7,6 +7,7 @@ import { createBreakpoints } from "@chakra-ui/theme-tools";
 
 // providers
 import { AuthProvider } from "./providers/AuthProvider";
+import { MemeProvider } from "./providers/MemeProvider";
 import { ChakraProvider } from "@chakra-ui/react";
 
 const config = {
@@ -25,7 +26,9 @@ ReactDOM.render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
       <AuthProvider>
-        <App />
+        <MemeProvider>
+          <App />
+        </MemeProvider>
       </AuthProvider>
     </ChakraProvider>
   </React.StrictMode>,

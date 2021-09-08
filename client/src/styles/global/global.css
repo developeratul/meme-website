@@ -86,32 +86,6 @@ nav.light {
   margin: auto;
 }
 
-.home_page {
-  padding: 30px 0;
-}
-
-.home_page .top_bar {
-  width: 100%;
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: (1fr)[12];
-      grid-template-columns: repeat(12, 1fr);
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.home_page .top_bar .search_meme {
-  grid-column: 0 / 6;
-}
-
-.home_page .top_bar .create_meme {
-  grid-column: 6 / -1;
-}
-
 @media screen and (max-width: 1024px) {
   .container {
     width: 700px;

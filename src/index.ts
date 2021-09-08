@@ -10,6 +10,7 @@ import { notFoundHandler, errorHandler } from "./middlewares/errorHandler";
 // routers
 import authRouter from "./routes/authRouter";
 import memeRouter from "./routes/memeRouter";
+import profileRouter from "./routes/profileRouter";
 
 const app: Application = express();
 const port: string | number = process.env.PORT || 8000;
@@ -30,6 +31,7 @@ mongoose
 // application routes
 app.use("/auth", authRouter);
 app.use("/meme", memeRouter);
+app.use("/profile", profileRouter);
 
 // error handlings
 app.use(notFoundHandler);

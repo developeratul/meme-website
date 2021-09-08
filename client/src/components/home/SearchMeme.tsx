@@ -1,10 +1,19 @@
-import { Input, InputGroup, InputRightElement, IconButton, Box } from "@chakra-ui/react";
+import {
+  Input,
+  InputGroup,
+  InputRightElement,
+  IconButton,
+  Box,
+  useColorModeValue,
+} from "@chakra-ui/react";
 
 const SearchMeme = () => {
+  const inputVariant = useColorModeValue("outline", "filled");
+
   return (
     <Box>
       <InputGroup>
-        <Input placeholder="Search memes..." variant="filled" />
+        <Input placeholder="Search memes..." variant={inputVariant} />
         <InputRightElement>
           <IconButton
             aria-label="search button"

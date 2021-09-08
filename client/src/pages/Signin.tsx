@@ -6,11 +6,11 @@ import {
   useColorModeValue,
   InputGroup,
   InputLeftAddon,
-  useToast,
 } from "@chakra-ui/react";
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import validator from "validator";
+import useToast from "../components/hooks/useToast";
 import { AuthContext } from "../providers/AuthProvider";
 
 // the signin page
@@ -19,13 +19,7 @@ const Signin = () => {
   const [pending, setPending] = useState(false);
   const { dispatch } = useContext(AuthContext);
   const { email, password } = input;
-  const toast = useToast({
-    position: "top",
-    status: "error",
-    title: "Error",
-    variant: "solid",
-    isClosable: true,
-  });
+  const toast = useToast();
   const history = useHistory();
 
   const formBackground = useColorModeValue("gray.50", "gray.700");
@@ -39,7 +33,7 @@ const Signin = () => {
 
   // for signing in the user with current information's stored in the input state
   async function signinUser() {
-    toast({ status: "info", title: "Info", description: "Working on it..." });
+    toast({ status: "info", description: "Working on it..." });
     setPending(true);
 
     try {
@@ -54,14 +48,14 @@ const Signin = () => {
         setPending(false);
         dispatch({ type: "LOGIN", payload: body.user });
         history.push("/");
-        toast({ status: "success", title: "Success", description: body.message });
+        toast({ status: "success", description: body.message });
       } else if (res.status === 400) {
         setPending(false);
-        toast({ description: body.message });
+        toast({ description: body.message, status: "error" });
       }
     } catch (err: any) {
       setPending(false);
-      toast({ title: "Error", description: err.message });
+      toast({ status: "error", description: err.message });
     }
   }
 
@@ -74,13 +68,17 @@ const Signin = () => {
     const { allFields, emailValid } = validations;
 
     if (!allFields) {
-      toast({ description: "Please fill all the field properly" });
+      toast({ status: "error", description: "Please fill all the field properly" });
     } else if (!emailValid) {
-      toast({ description: "Your email is invalid" });
+      toast({ status: "error", description: "Your email is invalid" });
     } else if (allFields && emailValid) {
       signinUser();
     }
   }
+
+  useEffect(() => {
+    document.title = "MEME Site / Signin";
+  }, []);
 
   return (
     <div className="signup_page">

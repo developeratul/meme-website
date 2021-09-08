@@ -11,14 +11,17 @@ import {
   Input,
   useDisclosure,
   Image,
-  useToast,
 } from "@chakra-ui/react";
 import { ChangeEvent, useContext, useState } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
+import { MemeContext } from "../../providers/MemeProvider";
+import useToast from "../hooks/useToast";
 
+// the create meme modal and the button
 const CreateMeme = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { state } = useContext(AuthContext);
+  const { dispatch } = useContext(MemeContext);
   const [input, setInput] = useState({
     image: "",
     title: "",
@@ -26,7 +29,7 @@ const CreateMeme = () => {
   const [previewSource, setPreviewSource] = useState("");
   const { image, title } = input;
   const { isAuthenticated } = state;
-  const toast = useToast({ position: "top", status: "error", variant: "solid" });
+  const toast = useToast();
 
   // for handling the input change of both of the inputs
   function HandleInputChange(event: ChangeEvent<HTMLInputElement>) {
@@ -60,14 +63,16 @@ const CreateMeme = () => {
 
       if (res.ok) {
         toast({ status: "success", description: body.message });
+        dispatch({ type: "UPLOAD_MEME", payload: body.meme });
         setInput({
-          title: "",
           image: "",
+          title: "",
         });
+        setPreviewSource("");
         onClose();
       }
     } catch (err: any) {
-      toast({ description: err.message || err });
+      toast({ description: err.message || err, status: "error" });
     }
   }
 
@@ -79,9 +84,9 @@ const CreateMeme = () => {
     const { allFields } = validations;
 
     if (!allFields) {
-      toast({ description: "Please fill all the required fields" });
+      toast({ description: "Please fill all the required fields", status: "error" });
     } else if (!isAuthenticated) {
-      toast({ description: "You must be logged in to post a meme" });
+      toast({ description: "You must be logged in to post a meme", status: "error" });
     } else if (isAuthenticated && allFields) {
       uploadMeme();
     }
@@ -89,12 +94,12 @@ const CreateMeme = () => {
 
   return (
     <Box>
-      <Button onClick={onOpen} width="100%" colorScheme="green">
+      <Button onClick={onOpen} width="100%" colorScheme="teal">
         Post Meme
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
+        <ModalOverlay backdropFilter="blur(10px)" />
         <ModalContent>
           <ModalHeader>Post a Meme</ModalHeader>
           <ModalCloseButton />
@@ -109,25 +114,22 @@ const CreateMeme = () => {
             <input
               onChange={HandleInputChange}
               accept="image/*"
-              hidden
               name="image"
               id="file-upload-input"
               type="file"
+              hidden
             />
             <label htmlFor="file-upload-input">
-              <span
-                style={{
-                  display: "block",
-                  textAlign: "center",
-                  background: "#718096",
-                  padding: "7px 0",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  marginBottom: "20px",
-                }}
+              <Button
+                mb={3}
+                w="100%"
+                cursor="pointer"
+                fontWeight="normal"
+                colorScheme="teal"
+                as="span"
               >
                 Upload Image
-              </span>
+              </Button>
             </label>
 
             {previewSource && (
@@ -136,7 +138,7 @@ const CreateMeme = () => {
                 src={previewSource}
                 alt={title}
                 w="100%"
-                height="300px"
+                height="200px"
                 objectFit="cover"
               />
             )}
