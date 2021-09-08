@@ -37,6 +37,7 @@
     "@types/jsonwebtoken": "^8.5.5",
     "@types/mongoose": "^5.11.97",
     "@types/multer": "^1.4.7",
+    "@types/node": "*",
     "dotenv": "^10.0.0",
     "nodemon": "^2.0.12",
     "ts-node": "^10.2.1",
