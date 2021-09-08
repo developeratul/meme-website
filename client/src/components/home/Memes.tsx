@@ -16,14 +16,16 @@ import { useContext, useEffect, useState } from "react";
 import { MemeContext } from "../../providers/MemeProvider";
 import { AuthContext } from "../../providers/AuthProvider";
 import { Meme } from "../../interfaces";
+import useToast from "../hooks/useToast";
 
 const Memes = () => {
   const { state: memes, dispatch } = useContext(MemeContext);
   const {
-    state: { user },
+    state: { user, isAuthenticated },
   } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const boxBackground = useColorModeValue("gray.50", "gray.700");
+  const toast = useToast();
 
   // for fetching the data of memes
   async function fetchMemes(abortController: AbortController) {
@@ -188,11 +190,15 @@ const Memes = () => {
                     <IconButton
                       aria-label="react button"
                       colorScheme={user && meme.likes.includes(user._id) ? "pink" : "gray"}
-                      onClick={() =>
-                        user && meme.likes.includes(user._id)
-                          ? unlikeMeme(meme._id)
-                          : likeMeme(meme._id)
-                      }
+                      onClick={() => {
+                        if (!isAuthenticated) {
+                          toast({ status: "warning", description: "You must be logged in" });
+                        } else {
+                          user && meme.likes.includes(user._id)
+                            ? unlikeMeme(meme._id)
+                            : likeMeme(meme._id);
+                        }
+                      }}
                     >
                       {user && meme.likes.includes(user._id) ? (
                         <i className="fas fa-heart"></i>

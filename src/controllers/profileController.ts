@@ -15,7 +15,6 @@ async function getProfile(req: Request, res: Response, next: NextFunction) {
       if (!user) {
         res.status(404).json({ message: "User was not found" });
       } else {
-        console.log(user);
         res.status(200).json({ user });
       }
     } else {

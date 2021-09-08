@@ -34,16 +34,27 @@ async function createMeme(req: any, res: Response, next: NextFunction) {
 
 async function getMemes(req: Request, res: Response, next: NextFunction) {
   try {
-    await Meme.find({})
-      .populate("author")
-      .sort({ time: -1 })
-      .exec((err, memes) => {
-        if (err) {
-          next(err);
-        } else {
-          res.status(200).json({ memes });
-        }
-      });
+    const { search } = req.query;
+
+    if (search) {
+      const memes =
+        (await Meme.find({ title: { $regex: `${search}`, $options: "gi" } })
+          .populate("author")
+          .sort({ time: -1 })) || [];
+
+      res.status(200).json({ memes });
+    } else {
+      await Meme.find({})
+        .populate("author")
+        .sort({ time: -1 })
+        .exec((err, memes) => {
+          if (err) {
+            next(err);
+          } else {
+            res.status(200).json({ memes });
+          }
+        });
+    }
   } catch (err) {
     next(err);
   }

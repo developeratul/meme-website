@@ -4,11 +4,12 @@ import { useColorModeValue } from "@chakra-ui/color-mode";
 import { Image } from "@chakra-ui/image";
 import { Box, Container, Flex, Grid, Heading } from "@chakra-ui/layout";
 import { Tooltip } from "@chakra-ui/tooltip";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import useToast from "../components/hooks/useToast";
 import { Meme, User } from "../interfaces";
+import { AuthContext } from "../providers/AuthProvider";
 
 interface Params {
   id: string;
@@ -26,6 +27,9 @@ const Profile = () => {
     memes: [],
     photoUrl: "",
   });
+  const {
+    state: { user: authUser, isAuthenticated },
+  } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const { id } = useParams<Params>();
   const toast = useToast();
@@ -58,8 +62,8 @@ const Profile = () => {
   async function likeMeme(memeId: string) {
     user.memes.map((meme: Meme) => {
       if (meme._id === memeId) {
-        if (user) {
-          meme.likes.push(user._id);
+        if (authUser) {
+          meme.likes.push(authUser._id);
         }
       }
       return meme;
@@ -82,7 +86,7 @@ const Profile = () => {
   async function unlikeMeme(memeId: string) {
     user.memes.map((meme: Meme) => {
       if (meme._id === memeId) {
-        meme.likes = meme.likes.filter((likeId) => likeId !== (user && user._id));
+        meme.likes = meme.likes.filter((likeId) => likeId !== (authUser && authUser._id));
       }
       return meme;
     });
@@ -242,14 +246,18 @@ const Profile = () => {
                     </Heading>
                     <IconButton
                       aria-label="react button"
-                      colorScheme={user && meme.likes.includes(user._id) ? "pink" : "gray"}
-                      onClick={() =>
-                        user && meme.likes.includes(user._id)
-                          ? unlikeMeme(meme._id)
-                          : likeMeme(meme._id)
-                      }
+                      colorScheme={authUser && meme.likes.includes(authUser._id) ? "pink" : "gray"}
+                      onClick={() => {
+                        if (!isAuthenticated) {
+                          toast({ status: "warning", description: "You must be logged in" });
+                        } else {
+                          authUser && meme.likes.includes(authUser._id)
+                            ? unlikeMeme(meme._id)
+                            : likeMeme(meme._id);
+                        }
+                      }}
                     >
-                      {user && meme.likes.includes(user._id) ? (
+                      {authUser && meme.likes.includes(authUser._id) ? (
                         <i className="fas fa-heart"></i>
                       ) : (
                         <i className="far fa-heart"></i>

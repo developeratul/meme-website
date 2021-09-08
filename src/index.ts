@@ -3,6 +3,7 @@ import express, { Application } from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 // middlewares
 import { notFoundHandler, errorHandler } from "./middlewares/errorHandler";
@@ -18,7 +19,7 @@ const port: string | number = process.env.PORT || 8000;
 // app configs
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors({ origin: ["http://localhost:3000"] }));
+app.use(cors({ origin: ["http://localhost:3000", "http://devr-memes.herokuapp.com"] }));
 app.use(cookieParser());
 
 // Database connection
@@ -32,6 +33,23 @@ mongoose
 app.use("/auth", authRouter);
 app.use("/meme", memeRouter);
 app.use("/profile", profileRouter);
+
+// for production
+if (process.env.NODE_ENV === "production") {
+  app.use((req, res, next) => {
+    if (req.header("x-forwarded-proto") !== "https")
+      res.redirect(`https://${req.header("host")}${req.url}`);
+    else next();
+  });
+}
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
 
 // error handlings
 app.use(notFoundHandler);

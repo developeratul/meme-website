@@ -41,7 +41,7 @@ async function signin(req: Request, res: Response, next: NextFunction) {
       } else {
         const authToken = await user.generateWebToken();
 
-        res.cookie("jwt", authToken);
+        res.cookie("jwt", authToken, { maxAge: 2592000000 });
         res.status(200).json({ message: `Welcome back ${user.name}`, user });
       }
     }
