@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "build": "tsc -p .",
+    "build": "tsc -p src",
     "heroku-postbuild": "npm install --prefix client && npm run build --prefix client"
   },
   "repository": {
