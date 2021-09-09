@@ -32,7 +32,7 @@ mongoose
 // application routes
 app.use("/auth", authRouter);
 app.use("/meme", memeRouter);
-app.use("/get_profile", profileRouter);
+app.use("/profile", profileRouter);
 
 // for production
 app.get("*", (req, res) => {
