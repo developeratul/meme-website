@@ -19,7 +19,7 @@ const port: string | number = process.env.PORT || 8000;
 // app configs
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"] }));
+app.use(cors({ origin: "*" }));
 app.use(cookieParser());
 
 // Database connection
@@ -35,13 +35,9 @@ app.use("/meme", memeRouter);
 app.use("/get_profile", profileRouter);
 
 // for production
-if (process.env.NODE_ENV == "production") {
-  app.use(express.static("/client/build"));
-
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"));
-  });
-}
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "/client/build/index.html"));
+});
 
 // error handlings
 app.use(notFoundHandler);
