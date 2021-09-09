@@ -32,7 +32,7 @@ mongoose
 // application routes
 app.use("/auth", authRouter);
 app.use("/meme", memeRouter);
-app.use("/profile", profileRouter);
+app.use("/get_profile", profileRouter);
 
 // for production
 if (process.env.NODE_ENV === "production") {

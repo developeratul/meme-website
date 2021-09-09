@@ -40,7 +40,7 @@ const Profile = () => {
   // for fetching the infos of the user according to the id
   async function fetchUserData(abortController: AbortController) {
     try {
-      const res = await fetch(`/profile/id/${id}`, {
+      const res = await fetch(`/get_profile/id/${id}`, {
         method: "GET",
         signal: abortController.signal,
         headers: { "Content-Type": "application/json" },
