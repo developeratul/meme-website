@@ -132,7 +132,7 @@ const Memes = () => {
                 boxShadow="md"
                 key={meme._id}
                 bg={boxBackground}
-                animation="step-start"
+                maxW="370px"
               >
                 <Image
                   h="220px"

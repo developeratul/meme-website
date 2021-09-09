@@ -3,6 +3,7 @@ import { IconButton } from "@chakra-ui/button";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { Image } from "@chakra-ui/image";
 import { Box, Container, Flex, Grid, Heading } from "@chakra-ui/layout";
+import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 import { Tooltip } from "@chakra-ui/tooltip";
 import { useContext, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
@@ -39,7 +40,7 @@ const Profile = () => {
   // for fetching the infos of the user according to the id
   async function fetchUserData(abortController: AbortController) {
     try {
-      const res = await fetch(`/profile/id/${id}`, {
+      const res = await fetch(`/get_profile/id/${id}`, {
         method: "GET",
         signal: abortController.signal,
         headers: { "Content-Type": "application/json" },
@@ -104,6 +105,32 @@ const Profile = () => {
     }
   }
 
+  // for deleting a meme
+  async function deleteMeme(memeId: string, memeImageId: string) {
+    const confirmed = window.confirm("Are you sure you want to delete this meme permanently?");
+
+    try {
+      if (confirmed) {
+        const res = await fetch("/meme/delete_meme", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ memeId, memeImageId }),
+        });
+        const body = await res.json();
+
+        if (res.ok) {
+          setUser((pre) => ({
+            ...pre,
+            memes: user.memes.filter((meme: Meme) => meme._id !== memeId),
+          }));
+          toast({ status: "success", description: body.message });
+        }
+      }
+    } catch (err: any) {
+      toast({ description: err.message || err, status: "error" });
+    }
+  }
+
   useEffect(() => {
     const abortController = new AbortController();
 
@@ -113,7 +140,7 @@ const Profile = () => {
       abortController.abort();
       setLoading(true);
     };
-  }, []);
+  }, [id]);
 
   if (loading) {
     return (
@@ -189,7 +216,7 @@ const Profile = () => {
                 boxShadow="md"
                 key={meme._id}
                 bg={boxBackground}
-                animation="step-start"
+                maxW="370px"
               >
                 <Image
                   h="220px"
@@ -240,30 +267,54 @@ const Profile = () => {
                     </Flex>
                   </Box>
 
-                  <Flex alignItems="center">
-                    <Heading fontFamily="Josefin Sans" mr={2} fontSize="md" fontWeight="normal">
-                      {meme.likes.length}
-                    </Heading>
-                    <IconButton
-                      aria-label="react button"
-                      colorScheme={authUser && meme.likes.includes(authUser._id) ? "pink" : "gray"}
-                      onClick={() => {
-                        if (!isAuthenticated) {
-                          toast({ status: "warning", description: "You must be logged in" });
-                        } else {
-                          authUser && meme.likes.includes(authUser._id)
-                            ? unlikeMeme(meme._id)
-                            : likeMeme(meme._id);
+                  {/* if the visiting user is the author of this profile, instead of the like button, this menu will be shown */}
+                  {user._id === (authUser && authUser._id) ? (
+                    <Menu>
+                      <MenuButton
+                        as={IconButton}
+                        aria-label="menu button"
+                        icon={<i className="fas fa-ellipsis-h"></i>}
+                      />
+                      <MenuList>
+                        <MenuItem
+                          onClick={() => deleteMeme(meme._id, meme.photoId)}
+                          icon={<i className="fas fa-trash-alt"></i>}
+                        >
+                          Delete Meme
+                        </MenuItem>
+                        {/* <MenuItem as={Link} to={`/`} icon={<i className="fas fa-pencil-alt"></i>}>
+                          Edit Meme
+                        </MenuItem> */}
+                      </MenuList>
+                    </Menu>
+                  ) : (
+                    <Flex alignItems="center">
+                      <Heading fontFamily="Josefin Sans" mr={2} fontSize="md" fontWeight="normal">
+                        {meme.likes.length}
+                      </Heading>
+                      <IconButton
+                        aria-label="react button"
+                        colorScheme={
+                          authUser && meme.likes.includes(authUser._id) ? "pink" : "gray"
                         }
-                      }}
-                    >
-                      {authUser && meme.likes.includes(authUser._id) ? (
-                        <i className="fas fa-heart"></i>
-                      ) : (
-                        <i className="far fa-heart"></i>
-                      )}
-                    </IconButton>
-                  </Flex>
+                        onClick={() => {
+                          if (!isAuthenticated) {
+                            toast({ status: "warning", description: "You must be logged in" });
+                          } else {
+                            authUser && meme.likes.includes(authUser._id)
+                              ? unlikeMeme(meme._id)
+                              : likeMeme(meme._id);
+                          }
+                        }}
+                      >
+                        {authUser && meme.likes.includes(authUser._id) ? (
+                          <i className="fas fa-heart"></i>
+                        ) : (
+                          <i className="far fa-heart"></i>
+                        )}
+                      </IconButton>
+                    </Flex>
+                  )}
                 </Flex>
               </Box>
             );

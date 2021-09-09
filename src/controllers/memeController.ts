@@ -85,5 +85,20 @@ async function unlike(req: any, res: Response, next: NextFunction) {
     next(err);
   }
 }
+async function deleteMeme(req: any, res: Response, next: NextFunction) {
+  try {
+    const { memeId, memeImageId } = req.body;
 
-export { createMeme, getMemes, like, unlike };
+    await Meme.findOneAndRemove({ _id: memeId }); // deleting the meme
+    await cloudinary.uploader.destroy(memeImageId); // deleting the meme image
+
+    // updating the users meme's field
+    await UserModel.updateOne({ _id: req.user._id }, { $pull: { memes: memeId } });
+
+    res.status(200).json({ message: "The meme was deleted" });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export { createMeme, getMemes, like, unlike, deleteMeme };

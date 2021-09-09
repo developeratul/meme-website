@@ -1,10 +1,10 @@
 import express from "express";
 
 import auth from "../middlewares/auth";
+import multer from "../utils/multer";
 
 // controllers
-import { createMeme, getMemes, like, unlike } from "../controllers/memeController";
-import multer from "../utils/multer";
+import { createMeme, getMemes, like, unlike, deleteMeme } from "../controllers/memeController";
 
 const router = express.Router();
 
@@ -19,5 +19,8 @@ router.post("/like", auth, like);
 
 // for unLiking a meme
 router.post("/unlike", auth, unlike);
+
+// for deleting a meme
+router.delete("/delete_meme", auth, deleteMeme);
 
 export default router;
