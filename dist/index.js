@@ -20,7 +20,7 @@ const port = process.env.PORT || 8000;
 // app configs
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
-app.use((0, cors_1.default)({ origin: "*", methods: ["GET", "POST", "PUT", "DELETE"] }));
+app.use((0, cors_1.default)({ origin: "*" }));
 app.use((0, cookie_parser_1.default)());
 // Database connection
 const connectionString = process.env.DB_URL || "";
@@ -28,11 +28,6 @@ mongoose_1.default
     .connect(connectionString)
     .then(() => console.log("- Connected to mongoDB database "))
     .catch((err) => console.log("-", err.message || err));
-// application routes
-app.use("/auth", authRouter_1.default);
-app.use("/meme", memeRouter_1.default);
-app.use("/profile", profileRouter_1.default);
-// for production
 if (process.env.NODE_ENV === "production") {
     app.use((req, res, next) => {
         if (req.header("x-forwarded-proto") !== "https")
@@ -41,6 +36,11 @@ if (process.env.NODE_ENV === "production") {
             next();
     });
 }
+// application routes
+app.use("/auth", authRouter_1.default);
+app.use("/meme", memeRouter_1.default);
+app.use("/get_profile", profileRouter_1.default);
+// for production
 if (process.env.NODE_ENV === "production") {
     app.use(express_1.default.static("client/build"));
     app.get("*", (req, res) => {

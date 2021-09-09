@@ -5,9 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const auth_1 = __importDefault(require("../middlewares/auth"));
+const multer_1 = __importDefault(require("../utils/multer"));
 // controllers
 const memeController_1 = require("../controllers/memeController");
-const multer_1 = __importDefault(require("../utils/multer"));
 const router = express_1.default.Router();
 // for creating a new meme
 router.post("/", auth_1.default, multer_1.default.single("image"), memeController_1.createMeme);
@@ -17,4 +17,6 @@ router.get("/", memeController_1.getMemes);
 router.post("/like", auth_1.default, memeController_1.like);
 // for unLiking a meme
 router.post("/unlike", auth_1.default, memeController_1.unlike);
+// for deleting a meme
+router.delete("/delete_meme", auth_1.default, memeController_1.deleteMeme);
 exports.default = router;
