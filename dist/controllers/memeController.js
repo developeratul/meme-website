@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteMeme = exports.unlike = exports.like = exports.getMemes = exports.createMeme = void 0;
+exports.getMemeById = exports.editMeme = exports.deleteMeme = exports.unlike = exports.like = exports.getMemes = exports.createMeme = void 0;
 const meme_1 = __importDefault(require("../models/meme"));
 const user_1 = __importDefault(require("../models/user"));
 const cloudinary_1 = __importDefault(require("../utils/cloudinary"));
+const mongoose_1 = __importDefault(require("mongoose"));
 function createMeme(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -46,14 +47,16 @@ function getMemes(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const { search } = req.query;
+            // if there is a search query use this
             if (search) {
-                const memes = (yield meme_1.default.find({ title: { $regex: `${search}`, $options: "gi" } })
+                const memes = yield meme_1.default.find({ title: { $regex: `${search}`, $options: "gi" } })
                     .populate("author")
-                    .sort({ time: -1 })) || [];
+                    .sort({ time: -1 });
                 res.status(200).json({ memes });
+                // otherwise this one
             }
             else {
-                yield meme_1.default.find({})
+                meme_1.default.find({})
                     .populate("author")
                     .sort({ time: -1 })
                     .exec((err, memes) => {
@@ -72,6 +75,31 @@ function getMemes(req, res, next) {
     });
 }
 exports.getMemes = getMemes;
+function getMemeById(req, res, next) {
+    var _a;
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { id } = req.params;
+            const validId = mongoose_1.default.isValidObjectId(id);
+            if (!validId) {
+                res.status(404).json({ message: "Meme was not found" });
+            }
+            else {
+                const meme = (yield ((_a = meme_1.default.findOne({ _id: id })) === null || _a === void 0 ? void 0 : _a.populate("author"))) || null;
+                if (!meme) {
+                    res.status(404).json({ message: "Meme was not found" });
+                }
+                else {
+                    res.status(200).json({ meme });
+                }
+            }
+        }
+        catch (err) {
+            next(err);
+        }
+    });
+}
+exports.getMemeById = getMemeById;
 function like(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -116,3 +144,37 @@ function deleteMeme(req, res, next) {
     });
 }
 exports.deleteMeme = deleteMeme;
+function editMeme(req, res, next) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const { memeId, title, photoId } = req.body;
+            // * if there is an image, we have to upload it and also remove the previous one
+            if (req.file && req.file.path) {
+                const image = req.file.path;
+                // removing the previous image
+                yield cloudinary_1.default.uploader.destroy(photoId);
+                // uploading the new image
+                const uploadedImage = yield cloudinary_1.default.uploader.upload(image, {
+                    folder: `meme-site/${req.user.name}`,
+                });
+                // updating the meme with the information's
+                yield meme_1.default.updateOne({ _id: memeId }, {
+                    title,
+                    photoUrl: uploadedImage.secure_url,
+                    photoId: uploadedImage.public_id,
+                    time: Date.now(),
+                });
+                res.status(200).json({ message: "Meme updated successfully" });
+                // * if we don't have any image, just update the title
+            }
+            else {
+                yield meme_1.default.updateOne({ _id: memeId }, { title, time: Date.now() });
+                res.status(200).json({ message: "Meme updated successfully" });
+            }
+        }
+        catch (err) {
+            next(err);
+        }
+    });
+}
+exports.editMeme = editMeme;

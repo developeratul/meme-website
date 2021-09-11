@@ -21,7 +21,11 @@ function getProfile(req, res, next) {
         try {
             const { id } = req.params;
             if (mongoose_1.default.isValidObjectId(id)) {
-                const user = (yield ((_a = (yield user_1.default.findOne({ _id: id }))) === null || _a === void 0 ? void 0 : _a.populate({ path: "memes", populate: { path: "author" } }))) || null;
+                const user = (yield ((_a = (yield user_1.default.findOne({ _id: id }))) === null || _a === void 0 ? void 0 : _a.populate({
+                    path: "memes",
+                    options: { sort: { time: -1 } },
+                    populate: { path: "author" },
+                }))) || null;
                 if (!user) {
                     res.status(404).json({ message: "User was not found" });
                 }
