@@ -12,10 +12,11 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
+import EditMeme from "./pages/EditMeme";
 
 const App = () => {
   const [pending, setPending] = useState(true);
-  const { dispatch, state } = useContext(AuthContext);
+  const { dispatch } = useContext(AuthContext);
 
   // for verifying if the user is authenticated
   async function checkAuth(abortController: AbortController) {
@@ -47,7 +48,7 @@ const App = () => {
     checkAuth(abortController);
 
     return () => abortController.abort();
-  }, [state.user]);
+  }, []);
 
   // the loader which will be shown till the response end's
   if (pending) {
@@ -66,6 +67,7 @@ const App = () => {
         <Route path="/profile/:id" component={Profile} />
         <Route path="/signin" component={Signin} />
         <Route path="/signup" component={Signup} />
+        <Route path="/editMeme/:id" component={EditMeme} />
         <Redirect to="/" />
       </Switch>
     </BrowserRouter>

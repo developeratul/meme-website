@@ -19,7 +19,7 @@ async function auth(req: any | Request, res: Response, next: NextFunction) {
 
     next();
   } catch (err: any) {
-    res.status(401).json({ message: "Unauthorized" });
+    res.status(401).json({ message: "You must be logged in", status: "Unauthorized" });
   }
 }
 

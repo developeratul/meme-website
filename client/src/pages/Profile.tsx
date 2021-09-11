@@ -282,9 +282,13 @@ const Profile = () => {
                         >
                           Delete Meme
                         </MenuItem>
-                        {/* <MenuItem as={Link} to={`/`} icon={<i className="fas fa-pencil-alt"></i>}>
+                        <MenuItem
+                          as={Link}
+                          to={`/editMeme/${meme._id}`}
+                          icon={<i className="fas fa-pencil-alt"></i>}
+                        >
                           Edit Meme
-                        </MenuItem> */}
+                        </MenuItem>
                       </MenuList>
                     </Menu>
                   ) : (

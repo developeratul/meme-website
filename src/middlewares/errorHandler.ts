@@ -13,6 +13,9 @@ export function errorHandler(err: Error, req: Request, res: Response, next: Next
   if (res.headersSent) {
     next("There was an unexpected error");
   } else {
+    if (process.env.NODE_ENV === "development") {
+      console.log(err.message || err);
+    }
     res.status(err.status || 500).json({ status: err.status || 500, message: err.message || err });
   }
 }

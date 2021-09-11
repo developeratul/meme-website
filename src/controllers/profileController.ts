@@ -10,7 +10,11 @@ async function getProfile(req: Request, res: Response, next: NextFunction) {
       const user =
         (await (
           await User.findOne({ _id: id })
-        )?.populate({ path: "memes", populate: { path: "author" } })) || null;
+        )?.populate({
+          path: "memes",
+          options: { sort: { time: -1 } },
+          populate: { path: "author" },
+        })) || null;
 
       if (!user) {
         res.status(404).json({ message: "User was not found" });
