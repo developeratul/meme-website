@@ -136,8 +136,14 @@ const EditMeme = () => {
   }
 
   return (
-    <Flex py={30} justifyContent="center" alignItems="center">
-      <Flex rounded={5} p={10} background={formBackground} width="400px" direction="column">
+    <Flex py={30} marginX="5px" justifyContent="center" alignItems="center">
+      <Flex
+        rounded={5}
+        p={[8, 10, 10, 10]}
+        background={formBackground}
+        width="400px"
+        direction="column"
+      >
         <Heading color="teal" fontSize="xx-large" fontWeight="normal" textAlign="center" mb={3}>
           Edit Meme
         </Heading>

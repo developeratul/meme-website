@@ -11,7 +11,7 @@ import { MemeProvider } from "./providers/MemeProvider";
 import { ChakraProvider } from "@chakra-ui/react";
 
 const config = {
-  initialColorMode: localStorage.getItem("chakra-ui-color-mode")?.replaceAll('"', "") || "dark",
+  initialColorMode: localStorage.getItem("chakra-ui-color-mode")?.replaceAll('"', "") || "light",
   useSystemColorMode: false,
   breakPoints: createBreakpoints({
     sm: "414px",

@@ -101,7 +101,7 @@ const Signup = () => {
           width="400px"
           direction="column"
           background={formBackground}
-          p={[5, 10, 10, 10]}
+          p={[8, 10, 10, 10]}
           rounded={5}
         >
           <Heading color="teal" textAlign="center" mb={5} fontSize="xx-large">

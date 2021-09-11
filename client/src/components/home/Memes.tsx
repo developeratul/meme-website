@@ -48,7 +48,7 @@ const Memes = () => {
 
   // for liking a meme
   async function likeMeme(memeId: string) {
-    memes.map((meme: Meme) => {
+    const updatedMemes = memes.map((meme: Meme) => {
       if (meme._id === memeId) {
         if (user) {
           meme.likes.push(user._id);
@@ -56,7 +56,7 @@ const Memes = () => {
       }
       return meme;
     });
-
+    dispatch({ type: "GET_MEMES", payload: updatedMemes });
     try {
       const res = await fetch("/meme/like", {
         method: "POST",
@@ -72,13 +72,13 @@ const Memes = () => {
 
   // for unLiking a meme
   async function unlikeMeme(memeId: string) {
-    memes.map((meme: Meme) => {
+    const updatedMemes = memes.map((meme: Meme) => {
       if (meme._id === memeId) {
         meme.likes = meme.likes.filter((likeId) => likeId !== (user && user._id));
       }
       return meme;
     });
-
+    dispatch({ type: "GET_MEMES", payload: updatedMemes });
     try {
       const res = await fetch("/meme/unlike", {
         method: "POST",

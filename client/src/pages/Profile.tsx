@@ -63,13 +63,12 @@ const Profile = () => {
   async function likeMeme(memeId: string) {
     user.memes.map((meme: Meme) => {
       if (meme._id === memeId) {
-        if (authUser) {
-          meme.likes.push(authUser._id);
+        if (user) {
+          meme.likes.push(user._id);
         }
       }
       return meme;
     });
-
     try {
       const res = await fetch("/meme/like", {
         method: "POST",
@@ -87,11 +86,10 @@ const Profile = () => {
   async function unlikeMeme(memeId: string) {
     user.memes.map((meme: Meme) => {
       if (meme._id === memeId) {
-        meme.likes = meme.likes.filter((likeId) => likeId !== (authUser && authUser._id));
+        meme.likes = meme.likes.filter((likeId) => likeId !== (user && user._id));
       }
       return meme;
     });
-
     try {
       const res = await fetch("/meme/unlike", {
         method: "POST",
