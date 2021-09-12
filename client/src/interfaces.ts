@@ -9,6 +9,14 @@ export interface User {
   photoUrl: string;
 }
 
+export interface Comment {
+  _id: string;
+  text: string;
+  time: number;
+  user: User;
+  meme: Meme;
+}
+
 export interface Meme {
   _id: string;
   title: string;
@@ -16,5 +24,6 @@ export interface Meme {
   photoId: string;
   author: User;
   likes: string[];
+  comments: Comment[];
   time: number;
 }

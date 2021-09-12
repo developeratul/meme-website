@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-export interface User extends mongoose.Document {
+export interface UserInterface extends mongoose.Document {
   name: string;
   email: string;
   password: string;
@@ -43,6 +43,6 @@ dataSchema.methods.generateWebToken = async function () {
   }
 };
 
-const User: mongoose.Model<User> = mongoose.model("User", dataSchema);
+const User: mongoose.Model<UserInterface> = mongoose.model("User", dataSchema);
 
 export default User;

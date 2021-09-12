@@ -12,6 +12,7 @@ import { notFoundHandler, errorHandler } from "./middlewares/errorHandler";
 import authRouter from "./routes/authRouter";
 import memeRouter from "./routes/memeRouter";
 import profileRouter from "./routes/profileRouter";
+import commentRouter from "./routes/commentRouter";
 
 const app: Application = express();
 const port: string | number = process.env.PORT || 8000;
@@ -41,6 +42,7 @@ if (process.env.NODE_ENV === "production") {
 app.use("/auth", authRouter);
 app.use("/meme", memeRouter);
 app.use("/get_profile", profileRouter);
+app.use("/comment", commentRouter);
 
 // for production
 if (process.env.NODE_ENV === "production") {

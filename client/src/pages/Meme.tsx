@@ -2,9 +2,10 @@ import { Avatar } from "@chakra-ui/avatar";
 import { IconButton } from "@chakra-ui/button";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { Image } from "@chakra-ui/image";
+import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { Box, Container, Flex, Grid, Heading } from "@chakra-ui/layout";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
-import { useContext, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import useToast from "../components/hooks/useToast";
@@ -19,15 +20,24 @@ interface Params {
 const SingleMemePage = () => {
   const [meme, setMeme] = useState<Meme>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [input, setInput] = useState<string>("");
+  const [pending, setPending] = useState(false);
+
   const {
     state: { user, isAuthenticated },
   } = useContext(AuthContext);
+
   const imageContainerBackground = useColorModeValue("gray.100", "gray.700");
   const topBarBg = useColorModeValue("gray.300", "gray.900");
   const memeTitleColor = useColorModeValue("gray.600", "gray.300");
+  const inputBackground = useColorModeValue("gray.100", "gray.800");
+  const inputVariant = useColorModeValue("outline", "filled");
+
   const { id } = useParams<Params>();
   const history = useHistory();
   const toast = useToast();
+
+  const atLeastContainsOneChar = /[a-z]/gi;
 
   async function fetchMemeData(abortController: AbortController) {
     try {
@@ -112,6 +122,55 @@ const SingleMemePage = () => {
     }
   }
 
+  // for posting a comment
+  async function postComment(e: FormEvent<HTMLDivElement>) {
+    e.preventDefault();
+    setPending(true);
+
+    try {
+      const res = await fetch("/comment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: input, memeId: meme?._id }),
+      });
+      const { comment, message } = await res.json();
+
+      if (res.ok) {
+        setPending(false);
+        setInput("");
+        const updatedMeme = meme && { ...meme, comments: [...meme.comments, comment] };
+        setMeme(updatedMeme);
+      } else if (res.status === 401) {
+        setPending(false);
+        toast({ status: "warning", description: message });
+      }
+    } catch (err: any) {
+      setPending(false);
+      toast({ status: "error", description: err.message });
+    }
+  }
+
+  // for deleting a comment
+  async function deleteComment(commentId: string, memeId: string) {
+    try {
+      const res = await fetch("/comment", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ commentId, memeId }),
+      });
+
+      if (res.ok && meme) {
+        const updatedMeme = {
+          ...meme,
+          comments: meme.comments.filter((comment) => comment._id !== commentId),
+        };
+        setMeme(updatedMeme);
+      }
+    } catch (err: any) {
+      toast({ status: "error", description: err.message || err });
+    }
+  }
+
   useEffect(() => {
     const abortController = new AbortController();
 
@@ -153,7 +212,7 @@ const SingleMemePage = () => {
 
         <Grid
           height="500px"
-          templateRows="70px 1fr"
+          templateRows="70px 1fr 70px"
           gridColumn={["1 / -1", "1 / -1", "8 / -1", "8 / -1"]}
         >
           <Flex
@@ -179,6 +238,7 @@ const SingleMemePage = () => {
                   fontWeight="normal"
                   fontSize="xl"
                   to={`/profile/${meme?.author._id}`}
+                  noOfLines={1}
                 >
                   {meme?.author.name}
                 </Heading>
@@ -243,18 +303,99 @@ const SingleMemePage = () => {
             </Flex>
           </Flex>
 
-          {/* Add comment adding feature and also fetch the comments here */}
           <Box overflowX="hidden" p={3}>
-            <Heading mb={5} fontSize="1xl" fontWeight="medium" color={memeTitleColor}>
+            <Heading mb={10} fontSize="1xl" fontWeight="medium" color={memeTitleColor}>
               {meme?.title}
             </Heading>
-            <Heading fontSize="2xl" mb={10} fontWeight="medium">
-              Comments (0)
+
+            <Heading fontSize="xl" fontWeight="medium" mb={5}>
+              Comments ({meme?.comments.length})
             </Heading>
-            <Heading fontFamily="Josefin Sans" textAlign="center" fontSize="2xl" color="gray.500">
-              No Comments
-            </Heading>
+            {meme?.comments.length ? (
+              meme.comments.map((comment) => {
+                const { user: commentUser } = comment;
+
+                return (
+                  <Flex
+                    mb={10}
+                    css={{ "&:last-child": { marginBottom: 0 } }}
+                    key={comment._id}
+                    justifyContent="space-between"
+                    alignItems="flex-start"
+                  >
+                    <Box>
+                      <Flex alignItems="center" mb={3}>
+                        <Avatar
+                          mr={2}
+                          size="sm"
+                          src={commentUser.photoUrl}
+                          alt={commentUser.name}
+                          name={commentUser.name}
+                        />
+                        <Box>
+                          <Heading
+                            color="teal"
+                            fontWeight="normal"
+                            fontSize="medium"
+                            as={Link}
+                            to={`/profile/${commentUser._id}`}
+                          >
+                            {commentUser.name}
+                          </Heading>
+                          <Heading color="gray.600" fontWeight="normal" fontSize="xs">
+                            {new Date(+comment.time).toDateString()}
+                          </Heading>
+                        </Box>
+                      </Flex>
+
+                      <Heading fontSize="md" fontWeight="normal">
+                        {comment.text}
+                      </Heading>
+                    </Box>
+
+                    {user && user._id === commentUser._id && isAuthenticated && (
+                      <IconButton
+                        onClick={() => deleteComment(comment._id, meme._id)}
+                        icon={<i className="fas fa-trash-alt"></i>}
+                        aria-label="delete comment button"
+                      />
+                    )}
+                  </Flex>
+                );
+              })
+            ) : (
+              <Heading
+                fontFamily="Josefin Sans"
+                py={20}
+                textAlign="center"
+                fontSize="2xl"
+                color="gray.500"
+              >
+                No Comments
+              </Heading>
+            )}
           </Box>
+
+          <Flex as="form" onSubmit={postComment} alignItems="center" px={5} bg={topBarBg}>
+            <InputGroup>
+              <Input
+                onChange={(event) => setInput(event.target.value)}
+                value={input}
+                variant={inputVariant}
+                bg={inputBackground}
+                placeholder="Write a comment"
+              />
+              <InputRightElement>
+                <IconButton
+                  type="submit"
+                  disabled={!input.match(atLeastContainsOneChar) || pending}
+                  aria-label="comment button"
+                  colorScheme="teal"
+                  icon={<i className="fas fa-search"></i>}
+                />
+              </InputRightElement>
+            </InputGroup>
+          </Flex>
         </Grid>
       </Grid>
     </Container>

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Meme from "../models/meme";
-import { User } from "../models/user";
+import { UserInterface } from "../models/user";
 import UserModel from "../models/user";
 import cloudinary from "../utils/cloudinary";
 import mongoose from "mongoose";
@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 async function createMeme(req: any, res: Response, next: NextFunction) {
   try {
     const { title } = req.body;
-    const user: User = req.user;
+    const user: UserInterface = req.user;
     const image = req.file.path;
 
     const photoUrl = await cloudinary.uploader.upload(image, {
@@ -70,7 +70,11 @@ async function getMemeById(req: Request, res: Response, next: NextFunction) {
     if (!validId) {
       res.status(404).json({ message: "Meme was not found" });
     } else {
-      const meme = (await Meme.findOne({ _id: id })?.populate("author")) || null;
+      const meme =
+        (await Meme.findOne({ _id: id })
+          ?.populate("author")
+          .populate({ path: "comments", options: { sort: { time: -1 } }, populate: "user" })) ||
+        null;
 
       if (!meme) {
         res.status(404).json({ message: "Meme was not found" });
@@ -86,7 +90,7 @@ async function getMemeById(req: Request, res: Response, next: NextFunction) {
 async function like(req: any, res: Response, next: NextFunction) {
   try {
     const { memeId } = req.body;
-    const user: User = req.user;
+    const user: UserInterface = req.user;
 
     await Meme.updateOne({ _id: memeId }, { $push: { likes: user._id } });
 
@@ -99,7 +103,7 @@ async function like(req: any, res: Response, next: NextFunction) {
 async function unlike(req: any, res: Response, next: NextFunction) {
   try {
     const { memeId } = req.body;
-    const user: User = req.user;
+    const user: UserInterface = req.user;
 
     await Meme.updateOne({ _id: memeId }, { $pull: { likes: user._id } });
 
