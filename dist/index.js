@@ -15,6 +15,7 @@ const errorHandler_1 = require("./middlewares/errorHandler");
 const authRouter_1 = __importDefault(require("./routes/authRouter"));
 const memeRouter_1 = __importDefault(require("./routes/memeRouter"));
 const profileRouter_1 = __importDefault(require("./routes/profileRouter"));
+const commentRouter_1 = __importDefault(require("./routes/commentRouter"));
 const app = (0, express_1.default)();
 const port = process.env.PORT || 8000;
 // app configs
@@ -28,6 +29,12 @@ mongoose_1.default
     .connect(connectionString)
     .then(() => console.log("- Connected to mongoDB database "))
     .catch((err) => console.log("-", err.message || err));
+// application routes
+app.use("/auth", authRouter_1.default);
+app.use("/meme", memeRouter_1.default);
+app.use("/get_profile", profileRouter_1.default);
+app.use("/comment", commentRouter_1.default);
+// for production
 if (process.env.NODE_ENV === "production") {
     app.use((req, res, next) => {
         if (req.header("x-forwarded-proto") !== "https")
@@ -36,11 +43,6 @@ if (process.env.NODE_ENV === "production") {
             next();
     });
 }
-// application routes
-app.use("/auth", authRouter_1.default);
-app.use("/meme", memeRouter_1.default);
-app.use("/get_profile", profileRouter_1.default);
-// for production
 if (process.env.NODE_ENV === "production") {
     app.use(express_1.default.static("client/build"));
     app.get("*", (req, res) => {

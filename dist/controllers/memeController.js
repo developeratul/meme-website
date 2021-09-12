@@ -85,7 +85,8 @@ function getMemeById(req, res, next) {
                 res.status(404).json({ message: "Meme was not found" });
             }
             else {
-                const meme = (yield ((_a = meme_1.default.findOne({ _id: id })) === null || _a === void 0 ? void 0 : _a.populate("author"))) || null;
+                const meme = (yield ((_a = meme_1.default.findOne({ _id: id })) === null || _a === void 0 ? void 0 : _a.populate("author").populate({ path: "comments", options: { sort: { time: -1 } }, populate: "user" }))) ||
+                    null;
                 if (!meme) {
                     res.status(404).json({ message: "Meme was not found" });
                 }

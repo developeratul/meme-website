@@ -10,6 +10,7 @@ const dataSchema = new mongoose_1.default.Schema({
     photoId: { type: String, required: true },
     author: { type: mongoose_1.default.Types.ObjectId, required: true, ref: "User" },
     likes: [{ type: mongoose_1.default.Types.ObjectId, ref: "User" }],
+    comments: [{ type: mongoose_1.default.Types.ObjectId, ref: "Comment" }],
     time: { type: String, required: true },
 });
 const Meme = mongoose_1.default.model("Meme", dataSchema);
