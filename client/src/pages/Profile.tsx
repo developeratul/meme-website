@@ -61,14 +61,15 @@ const Profile = () => {
 
   // for liking a meme
   async function likeMeme(memeId: string) {
-    user.memes.map((meme: Meme) => {
-      if (meme._id === memeId) {
-        if (user) {
-          meme.likes.push(user._id);
+    if (authUser) {
+      const updatedMemes = user.memes.map((meme: Meme) => {
+        if (meme._id === memeId) {
+          meme.likes.push(authUser._id);
         }
-      }
-      return meme;
-    });
+        return meme;
+      });
+      setUser({ ...user, memes: updatedMemes });
+    }
     try {
       const res = await fetch("/meme/like", {
         method: "POST",
@@ -84,12 +85,15 @@ const Profile = () => {
 
   // for unLiking a meme
   async function unlikeMeme(memeId: string) {
-    user.memes.map((meme: Meme) => {
-      if (meme._id === memeId) {
-        meme.likes = meme.likes.filter((likeId) => likeId !== (user && user._id));
-      }
-      return meme;
-    });
+    if (authUser) {
+      const updatedMemes = user.memes.map((meme: Meme) => {
+        if (meme._id === memeId) {
+          meme.likes = meme.likes.filter((like) => like !== authUser._id);
+        }
+        return meme;
+      });
+      setUser({ ...user, memes: updatedMemes });
+    }
     try {
       const res = await fetch("/meme/unlike", {
         method: "POST",
@@ -228,7 +232,15 @@ const Profile = () => {
                 />
 
                 <Tooltip label={meme.title} hasArrow>
-                  <Heading cursor="pointer" noOfLines={1} fontWeight="medium" fontSize="1xl" mb={3}>
+                  <Heading
+                    as={Link}
+                    to={`/memeId/${meme._id}`}
+                    cursor="pointer"
+                    noOfLines={1}
+                    fontWeight="medium"
+                    fontSize="1xl"
+                    mb={3}
+                  >
                     {meme.title}
                   </Heading>
                 </Tooltip>

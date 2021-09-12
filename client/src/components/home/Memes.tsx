@@ -146,7 +146,15 @@ const Memes = () => {
                 />
 
                 <Tooltip label={meme.title} hasArrow>
-                  <Heading cursor="pointer" noOfLines={1} fontWeight="medium" fontSize="1xl" mb={3}>
+                  <Heading
+                    as={Link}
+                    to={`/memeId/${meme._id}`}
+                    cursor="pointer"
+                    noOfLines={1}
+                    fontWeight="medium"
+                    fontSize="1xl"
+                    mb={3}
+                  >
                     {meme.title}
                   </Heading>
                 </Tooltip>

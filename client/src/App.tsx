@@ -3,8 +3,10 @@ import { Spinner } from "@chakra-ui/spinner";
 import { useContext, useEffect, useState } from "react";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 
+// contexts
 import { AuthContext } from "./providers/AuthProvider";
 
+// components
 import Nav from "./components/global/Nav";
 
 // pages
@@ -13,6 +15,7 @@ import Profile from "./pages/Profile";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import EditMeme from "./pages/EditMeme";
+import Meme from "./pages/Meme";
 
 const App = () => {
   const [pending, setPending] = useState(true);
@@ -50,7 +53,7 @@ const App = () => {
     return () => abortController.abort();
   }, []);
 
-  // the loader which will be shown till the response end's
+  // the loader which will be shown till the client connects with the server
   if (pending) {
     return (
       <Flex height="100vh" justifyContent="center" alignItems="center">
@@ -67,6 +70,7 @@ const App = () => {
         <Route path="/profile/:id" component={Profile} />
         <Route path="/signin" component={Signin} />
         <Route path="/signup" component={Signup} />
+        <Route path="/memeId/:id" component={Meme} />
         <Route path="/editMeme/:id" component={EditMeme} />
         <Redirect to="/" />
       </Switch>

@@ -22,7 +22,7 @@ router.post("/", auth, multer.single("image"), createMeme);
 // for getting memes from DB
 router.get("/", getMemes);
 
-router.get("/getMemeById/:id", auth, getMemeById);
+router.get("/getMemeById/:id", getMemeById);
 
 // for liking a meme
 router.post("/like", auth, like);
