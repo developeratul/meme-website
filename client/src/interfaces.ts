@@ -5,11 +5,12 @@ export interface User {
   password: string;
   portfolio: string;
   time: number;
-  memes: any[];
+  memes: Meme[];
   photoUrl: string;
+  photoId: string;
 }
 
-export interface Comment {
+interface Comment {
   _id: string;
   text: string;
   time: number;

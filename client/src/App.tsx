@@ -16,6 +16,7 @@ import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
 import EditMeme from "./pages/EditMeme";
 import Meme from "./pages/Meme";
+import Settings from "./pages/Settings";
 
 const App = () => {
   const [pending, setPending] = useState(true);
@@ -71,6 +72,7 @@ const App = () => {
         <Route path="/signin" component={Signin} />
         <Route path="/signup" component={Signup} />
         <Route path="/memeId/:id" component={Meme} />
+        <Route path="/settings" component={Settings} />
         <Route path="/editMeme/:id" component={EditMeme} />
         <Redirect to="/" />
       </Switch>

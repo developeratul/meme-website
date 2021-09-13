@@ -18,6 +18,8 @@ import { AuthContext } from "../../providers/AuthProvider";
 import { Meme } from "../../interfaces";
 import useToast from "../hooks/useToast";
 
+// this component is being used in the home page which is containing all the memes
+// which were posted
 const Memes = () => {
   const { state: memes, dispatch } = useContext(MemeContext);
   const {
@@ -113,7 +115,7 @@ const Memes = () => {
   return (
     <Container maxW="container.lg" pb={10}>
       <Grid
-        gap={5}
+        gap={3}
         templateColumns={[
           "repeat(auto-fit, minmax(200px, 1fr))",
           "repeat(auto-fit, minmax(300px, 1fr))",
@@ -132,7 +134,7 @@ const Memes = () => {
                 boxShadow="md"
                 key={meme._id}
                 bg={boxBackground}
-                maxW="370px"
+                // maxW="370px"
               >
                 <Image
                   h="220px"

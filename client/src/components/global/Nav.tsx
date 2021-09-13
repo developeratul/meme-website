@@ -4,7 +4,7 @@ import { useContext, useRef } from "react";
 import { Link, NavLink, useHistory } from "react-router-dom";
 import { AuthContext } from "../../providers/AuthProvider";
 
-// the global nav bar
+// the global nav bar on the top
 const Nav = () => {
   const { toggleColorMode, colorMode } = useColorMode();
   const { state, dispatch } = useContext(AuthContext);
@@ -62,6 +62,9 @@ const Nav = () => {
                 <MenuList>
                   <MenuItem as={Link} to={`/profile/${user._id}`}>
                     View Profile
+                  </MenuItem>
+                  <MenuItem as={Link} to={`/settings`}>
+                    Profile Settings
                   </MenuItem>
                   <MenuItem onClick={LogoutUser}>Log into another account</MenuItem>
                 </MenuList>

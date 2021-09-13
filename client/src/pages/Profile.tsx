@@ -1,5 +1,5 @@
 import { Avatar } from "@chakra-ui/avatar";
-import { IconButton } from "@chakra-ui/button";
+import { Button, IconButton } from "@chakra-ui/button";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { Image } from "@chakra-ui/image";
 import { Box, Container, Flex, Grid, Heading } from "@chakra-ui/layout";
@@ -27,6 +27,7 @@ const Profile = () => {
     time: 0,
     memes: [],
     photoUrl: "",
+    photoId: "",
   });
   const {
     state: { user: authUser, isAuthenticated },
@@ -157,40 +158,45 @@ const Profile = () => {
   return (
     <Container maxW="container.lg" py={20}>
       {/* the header of the user's profile page containing some primary infos about the user */}
-      <Flex
-        alignItems="center"
-        justifyContent={["center", "stretch", "stretch", "stretch"]}
-        direction={["column", "row", "row", "row"]}
-        mb={10}
-        borderBottom="1px"
-        pb={5}
-      >
-        <Avatar
-          mr={[0, 5, 5, 5]}
-          mb={[5, 0, 0, 0]}
-          src={user.photoUrl}
-          alt={user.name}
-          name={user.name}
-          size="2xl"
-        />
-        <Box textAlign={["center", "left", "left", "left"]}>
-          <Heading
-            as="a"
-            target="_blank"
-            href={user.portfolio}
-            color="teal"
-            fontWeight="normal"
-            mb={2}
-          >
-            {user.name}
-          </Heading>
-          <Heading fontSize="md" color="gray.400" fontWeight="normal" mb={2}>
-            {user.email}
-          </Heading>
-          <Heading fontSize="md" color="gray.400" fontWeight="normal">
-            {new Date(+user.time).toDateString()}
-          </Heading>
-        </Box>
+      <Flex borderBottom="1px" mb={10} pb={5} justifyContent="space-between" alignItems="center">
+        <Flex
+          alignItems="center"
+          justifyContent={["center", "stretch", "stretch", "stretch"]}
+          direction={["column", "row", "row", "row"]}
+        >
+          <Avatar
+            mr={[0, 5, 5, 5]}
+            mb={[5, 0, 0, 0]}
+            src={user.photoUrl}
+            alt={user.name}
+            name={user.name}
+            size="2xl"
+          />
+          <Box textAlign={["center", "left", "left", "left"]}>
+            <Heading
+              as="a"
+              target="_blank"
+              href={user.portfolio}
+              color="teal"
+              fontWeight="normal"
+              mb={2}
+            >
+              {user.name}
+            </Heading>
+            <Heading fontSize="md" color="gray.400" fontWeight="normal" mb={2}>
+              {user.email}
+            </Heading>
+            <Heading fontSize="md" color="gray.400" fontWeight="normal">
+              {new Date(+user.time).toDateString()}
+            </Heading>
+          </Box>
+        </Flex>
+
+        {user._id === authUser?._id && (
+          <Button colorScheme="teal" as={Link} to="/settings">
+            Edit Profile
+          </Button>
+        )}
       </Flex>
 
       <Heading mb={5} fontWeight="normal" fontSize="xl">
@@ -199,7 +205,7 @@ const Profile = () => {
 
       {/* the memes grid which will contain the memes posted by the user */}
       <Grid
-        gap={5}
+        gap={3}
         templateColumns={[
           "repeat(auto-fit, minmax(200px, 1fr))",
           "repeat(auto-fit, minmax(300px, 1fr))",
@@ -218,7 +224,7 @@ const Profile = () => {
                 boxShadow="md"
                 key={meme._id}
                 bg={boxBackground}
-                maxW="370px"
+                // maxW="370px"
               >
                 <Image
                   h="220px"

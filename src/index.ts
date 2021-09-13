@@ -13,6 +13,7 @@ import authRouter from "./routes/authRouter";
 import memeRouter from "./routes/memeRouter";
 import profileRouter from "./routes/profileRouter";
 import commentRouter from "./routes/commentRouter";
+import settingsRouter from "./routes/settingsRouter";
 
 const app: Application = express();
 const port: string | number = process.env.PORT || 8000;
@@ -35,6 +36,7 @@ app.use("/auth", authRouter);
 app.use("/meme", memeRouter);
 app.use("/get_profile", profileRouter);
 app.use("/comment", commentRouter);
+app.use("/get_settings", settingsRouter);
 
 // for production
 if (process.env.NODE_ENV === "production") {
@@ -52,6 +54,7 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
   });
 }
+
 // error handlings
 app.use(notFoundHandler);
 app.use(errorHandler);

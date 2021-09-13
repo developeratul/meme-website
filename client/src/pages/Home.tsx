@@ -1,11 +1,12 @@
 import { Grid, Container } from "@chakra-ui/react";
+import { useEffect } from "react";
 
+// components
 import CreateMeme from "../components/home/CreateMeme";
 import SearchMeme from "../components/home/SearchMeme";
-import { useEffect } from "react";
 import Memes from "../components/home/Memes";
 
-// the home page
+// the home page which will showup a search bar and all the memes which were posted
 const Home = () => {
   useEffect(() => {
     document.title = "MEME Site / Memes";
@@ -26,6 +27,7 @@ const Home = () => {
         </Grid>
       </Container>
 
+      {/* showcasing all the memes which were posted */}
       <Memes />
     </>
   );

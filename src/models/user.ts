@@ -9,6 +9,7 @@ export interface UserInterface extends mongoose.Document {
   portfolio: string;
   time: number;
   photoUrl: string;
+  photoId: string;
   generateWebToken: () => "";
 }
 
@@ -19,6 +20,7 @@ const dataSchema = new mongoose.Schema({
   portfolio: { type: String, required: true },
   time: { type: Number, required: true, default: Date.now() },
   photoUrl: { type: String },
+  photoId: { type: String },
   memes: [{ type: mongoose.Types.ObjectId, ref: "Meme" }],
   tokens: [{ token: String }],
 });
