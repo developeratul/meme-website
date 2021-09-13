@@ -160,7 +160,15 @@ const Profile = () => {
   return (
     <Container maxW="container.lg" py={20}>
       {/* the header of the user's profile page containing some primary infos about the user */}
-      <Flex borderBottom="1px" mb={10} pb={5} justifyContent="space-between" alignItems="center">
+      <Flex
+        borderBottom="1px"
+        mb={10}
+        pb={5}
+        justifyContent={["center", "space-between", "space-between", "space-between"]}
+        direction={["column", "unset", "unset", "unset"]}
+        alignItems="center"
+        gridRowGap={[5, 0, 0, 0]}
+      >
         <Flex
           alignItems="center"
           justifyContent={["center", "stretch", "stretch", "stretch"]}
