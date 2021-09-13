@@ -57,4 +57,19 @@ async function update_profile_avatar(req: any, res: Response, next: NextFunction
   }
 }
 
-export { update_account_settings, update_profile_avatar };
+async function update_security_settings(req: any, res: Response, next: NextFunction) {
+  try {
+    const { password } = req.body;
+
+    req.user.password = password;
+    await req.user.save();
+
+    const user = await User.findOne({ _id: req.user._id });
+
+    res.status(200).json({ message: "Your password has been updated", user });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export { update_account_settings, update_profile_avatar, update_security_settings };

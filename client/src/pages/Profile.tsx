@@ -49,6 +49,7 @@ const Profile = () => {
       const body = await res.json();
 
       if (res.ok) {
+        document.title = `${body.user.name}'s profile`;
         setUser(body.user);
         setLoading(false);
       } else if (res.status === 404) {
@@ -137,6 +138,7 @@ const Profile = () => {
   useEffect(() => {
     const abortController = new AbortController();
 
+    document.title = "Loading profile ...";
     fetchUserData(abortController);
 
     return () => {

@@ -33,6 +33,7 @@ const SingleMemePage = () => {
       const body = await res.json();
 
       if (res.ok) {
+        document.title = `MEME-Site: ${body.meme.author.name} / ${body.meme.title}`;
         setMeme(body.meme);
         setLoading(false);
       } else if (res.status === 404) {
@@ -48,6 +49,7 @@ const SingleMemePage = () => {
   useEffect(() => {
     const abortController = new AbortController();
 
+    document.title = "Loading meme ...";
     fetchMemeData(abortController);
 
     return () => {
