@@ -6,6 +6,7 @@ import {
   useColorModeValue,
   InputGroup,
   InputLeftAddon,
+  Container,
 } from "@chakra-ui/react";
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
@@ -95,13 +96,19 @@ const Signup = () => {
 
   return (
     <div className="signup_page">
-      <Flex marginY="50" marginX="5px" justifyContent="center" alignItems="center">
+      <Container
+        maxW="400px"
+        marginY="50"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
         <Flex
+          w="100%"
           boxShadow="lg"
-          width="400px"
           direction="column"
           background={formBackground}
-          p={[8, 10, 10, 10]}
+          p={[7, 10, 10, 10]}
           rounded={5}
         >
           <Heading color="teal" textAlign="center" mb={5} fontSize="xx-large">
@@ -178,7 +185,7 @@ const Signup = () => {
             Sign up
           </Button>
         </Flex>
-      </Flex>
+      </Container>
     </div>
   );
 };
