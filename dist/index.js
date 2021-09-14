@@ -38,17 +38,10 @@ app.use("/comment", commentRouter_1.default);
 app.use("/get_settings", settingsRouter_1.default);
 // for production
 if (process.env.NODE_ENV === "production") {
-    app.use((req, res, next) => {
-        if (req.header("x-forwarded-proto") !== "https")
-            res.redirect(`https://${req.header("host")}${req.url}`);
-        else
-            next();
-    });
-}
-if (process.env.NODE_ENV === "production") {
-    app.use(express_1.default.static("client/build"));
-    app.get("*", (req, res) => {
-        res.sendFile(path_1.default.resolve(__dirname, "client", "build", "index.html"));
+    app.use(express_1.default.static('client/build'));
+    app.get('*', function (req, res) {
+        const fullPath = path_1.default.join(__dirname, '../client', 'build', 'index.html');
+        res.sendFile(fullPath);
     });
 }
 // error handlings
