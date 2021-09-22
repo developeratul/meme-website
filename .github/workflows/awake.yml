@@ -1,0 +1,14 @@
+name: Awake Action
+on:
+  schedule:
+    # every 45 minutes, the steps below are triggered
+    - cron: "45 * * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: main-awake
+        uses: devpolo/awake-action@v1
+        with:
+          url: "http://devr-memes.herokuapp.com/"
