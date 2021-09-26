@@ -83,21 +83,8 @@ const Signin = () => {
 
   return (
     <div className="signup_page">
-      <Container
-        maxW="400px"
-        display="flex"
-        marginY="50"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Flex
-          w="100%"
-          boxShadow="lg"
-          direction="column"
-          background={formBackground}
-          p={[7, 10, 10, 10]}
-          rounded={5}
-        >
+      <Container maxW="400px" display="flex" marginY="50" justifyContent="center" alignItems="center">
+        <Flex w="100%" boxShadow="lg" direction="column" background={formBackground} p={[7, 10, 10, 10]} rounded={5}>
           <Heading color="teal" textAlign="center" mb={5} fontSize="xx-large">
             Sign in
           </Heading>
@@ -127,12 +114,7 @@ const Signin = () => {
             />
           </InputGroup>
 
-          <Button
-            disabled={pending}
-            onClick={ValidateInputInfos}
-            fontWeight="normal"
-            colorScheme="teal"
-          >
+          <Button disabled={pending} onClick={ValidateInputInfos} fontWeight="normal" colorScheme="teal">
             Sign in
           </Button>
         </Flex>
