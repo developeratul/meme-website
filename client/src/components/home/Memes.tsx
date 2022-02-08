@@ -1,5 +1,5 @@
 import {
-  Grid,
+  SimpleGrid,
   Container,
   Box,
   useColorModeValue,
@@ -10,6 +10,7 @@ import {
   IconButton,
   Avatar,
 } from "@chakra-ui/react";
+import { Spinner } from "@chakra-ui/spinner";
 import { Link } from "react-router-dom";
 
 import { useContext, useEffect, useState } from "react";
@@ -104,23 +105,15 @@ const Memes = () => {
 
   if (loading) {
     return (
-      <Flex justifyContent="center" py={20}>
-        <Heading fontSize="2xl" fontWeight="normal">
-          Loading memes ...
-        </Heading>
+      <Flex align="center" w="full" h="full" justify="center" py={20}>
+        <Spinner />
       </Flex>
     );
   }
 
   return (
     <Container maxW="container.lg" pb={10}>
-      <Grid
-        gap={3}
-        templateColumns={[
-          "repeat(auto-fit, minmax(200px, 1fr))",
-          "repeat(auto-fit, minmax(300px, 1fr))",
-        ]}
-      >
+      <SimpleGrid w="full" gap={3} columns={[1, 1, 2, 3]}>
         {memes.length > 0 ? (
           memes.map((meme: Meme) => {
             const time = new Date(+meme.time).toDateString();
@@ -222,11 +215,11 @@ const Memes = () => {
             );
           })
         ) : (
-          <Heading textAlign="center" fontSize="2xl" fontWeight="md" color="gray.500">
+          <Heading w="full" textAlign="center" fontSize="2xl" fontWeight="md" color="gray.500">
             No Memes to show
           </Heading>
         )}
-      </Grid>
+      </SimpleGrid>
     </Container>
   );
 };

@@ -26,6 +26,7 @@ const CreateMeme = () => {
     image: "",
     title: "",
   });
+  const [processing, setProcessing] = useState(false);
   const [previewSource, setPreviewSource] = useState("");
   const { image, title } = input;
   const { isAuthenticated } = state;
@@ -48,6 +49,7 @@ const CreateMeme = () => {
   // for saving the current meme information's in the database stored in the input state
   async function uploadMeme() {
     toast({ status: "info", description: "working on it..." });
+    setProcessing(true);
 
     try {
       const formData = new FormData();
@@ -70,8 +72,10 @@ const CreateMeme = () => {
         });
         setPreviewSource("");
         onClose();
+        setProcessing(false);
       }
     } catch (err: any) {
+      setProcessing(false);
       toast({ description: err.message || err, status: "error" });
     }
   }
@@ -144,8 +148,8 @@ const CreateMeme = () => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button onClick={Validate} colorScheme="blue" mr={3}>
-              Save
+            <Button disabled={processing} onClick={Validate} colorScheme="blue" mr={3}>
+              {processing ? "Processing..." : "Save"}
             </Button>
             <Button onClick={onClose}>Cancel</Button>
           </ModalFooter>

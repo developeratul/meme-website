@@ -21,11 +21,7 @@ const MemeContent = ({ meme, setMeme }: Props) => {
   const memeTitleColor = useColorModeValue("gray.600", "gray.300");
 
   return (
-    <Grid
-      height="500px"
-      templateRows="70px 1fr 70px"
-      gridColumn={["1 / -1", "1 / -1", "8 / -1", "8 / -1"]}
-    >
+    <Grid height="500px" templateRows="70px 1fr 70px" gridColumn={["1 / -1", "1 / -1", "8 / -1", "8 / -1"]}>
       {/* contains the like button and user related info's */}
       <TopBar meme={meme} setMeme={setMeme} />
 

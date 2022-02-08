@@ -39,14 +39,23 @@ async function getMemes(req: Request, res: Response, next: NextFunction) {
 
     // if there is a search query use this
     if (search) {
-      const memes = await Meme.find({ title: { $regex: `${search}`, $options: "gi" } })
-        .populate("author")
-        .sort({ time: -1 });
+      let memes = [];
+
+      if (search !== "") {
+        memes = await Meme.find({
+          $or: [{ title: { $regex: `${search}`, $options: "gi" } }],
+        })
+          .populate("author")
+          .sort({ time: -1 });
+      } else {
+        memes = await Meme.find({}).lean();
+      }
 
       res.status(200).json({ memes });
       // otherwise this one
     } else {
       Meme.find({})
+        .lean()
         .populate("author")
         .sort({ time: -1 })
         .exec((err, memes) => {

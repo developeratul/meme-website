@@ -2,7 +2,7 @@ import { Avatar } from "@chakra-ui/avatar";
 import { Button, IconButton } from "@chakra-ui/button";
 import { useColorModeValue } from "@chakra-ui/color-mode";
 import { Image } from "@chakra-ui/image";
-import { Box, Container, Flex, Grid, Heading } from "@chakra-ui/layout";
+import { Box, Container, Flex, SimpleGrid, Heading } from "@chakra-ui/layout";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 import { Tooltip } from "@chakra-ui/tooltip";
 import { useContext, useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import useToast from "../components/hooks/useToast";
 import { Meme, User } from "../interfaces";
 import { AuthContext } from "../providers/AuthProvider";
+import { Spinner } from "@chakra-ui/spinner";
 
 interface Params {
   id: string;
@@ -149,10 +150,8 @@ const Profile = () => {
 
   if (loading) {
     return (
-      <Flex justifyContent="center" py={20}>
-        <Heading fontSize="2xl" fontWeight="normal">
-          Loading ...
-        </Heading>
+      <Flex w="full" h="full" align="center" justify="center" py={20}>
+        <Spinner />
       </Flex>
     );
   }
@@ -174,9 +173,23 @@ const Profile = () => {
           justifyContent={["center", "stretch", "stretch", "stretch"]}
           direction={["column", "row", "row", "row"]}
         >
-          <Avatar mr={[0, 5, 5, 5]} mb={[5, 0, 0, 0]} src={user.photoUrl} alt={user.name} name={user.name} size="2xl" />
+          <Avatar
+            mr={[0, 5, 5, 5]}
+            mb={[5, 0, 0, 0]}
+            src={user.photoUrl}
+            alt={user.name}
+            name={user.name}
+            size="2xl"
+          />
           <Box textAlign={["center", "left", "left", "left"]}>
-            <Heading as="a" target="_blank" href={user.portfolio} color="teal" fontWeight="normal" mb={2}>
+            <Heading
+              as="a"
+              target="_blank"
+              href={user.portfolio}
+              color="teal"
+              fontWeight="normal"
+              mb={2}
+            >
               {user.name}
             </Heading>
             <Heading fontSize="md" color="gray.400" fontWeight="normal" mb={2}>
@@ -200,7 +213,7 @@ const Profile = () => {
       </Heading>
 
       {/* the memes grid which will contain the memes posted by the user */}
-      <Grid gap={3} templateColumns={["repeat(auto-fit, minmax(200px, 1fr))", "repeat(auto-fit, minmax(300px, 1fr))"]}>
+      <SimpleGrid columns={[1, 1, 2, 3]} gap={3}>
         {user.memes.length > 0 ? (
           user.memes.map((meme: Meme) => {
             const time = new Date(+meme.time).toDateString();
@@ -288,7 +301,11 @@ const Profile = () => {
                         >
                           Delete Meme
                         </MenuItem>
-                        <MenuItem as={Link} to={`/editMeme/${meme._id}`} icon={<i className="fas fa-pencil-alt"></i>}>
+                        <MenuItem
+                          as={Link}
+                          to={`/editMeme/${meme._id}`}
+                          icon={<i className="fas fa-pencil-alt"></i>}
+                        >
                           Edit Meme
                         </MenuItem>
                       </MenuList>
@@ -300,12 +317,16 @@ const Profile = () => {
                       </Heading>
                       <IconButton
                         aria-label="react button"
-                        colorScheme={authUser && meme.likes.includes(authUser._id) ? "pink" : "gray"}
+                        colorScheme={
+                          authUser && meme.likes.includes(authUser._id) ? "pink" : "gray"
+                        }
                         onClick={() => {
                           if (!isAuthenticated) {
                             toast({ status: "warning", description: "You must be logged in" });
                           } else {
-                            authUser && meme.likes.includes(authUser._id) ? unlikeMeme(meme._id) : likeMeme(meme._id);
+                            authUser && meme.likes.includes(authUser._id)
+                              ? unlikeMeme(meme._id)
+                              : likeMeme(meme._id);
                           }
                         }}
                       >
@@ -326,7 +347,7 @@ const Profile = () => {
             No Memes to show
           </Heading>
         )}
-      </Grid>
+      </SimpleGrid>
     </Container>
   );
 };

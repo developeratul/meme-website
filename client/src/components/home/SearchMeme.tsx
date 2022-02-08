@@ -42,11 +42,7 @@ const SearchMeme = () => {
         />
         <InputRightElement>
           <IconButton
-            onClick={() => {
-              if (input) {
-                searchMeme();
-              }
-            }}
+            onClick={searchMeme}
             aria-label="search button"
             colorScheme="teal"
             icon={<i className="fas fa-search"></i>}
