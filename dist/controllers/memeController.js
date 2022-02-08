@@ -49,14 +49,23 @@ function getMemes(req, res, next) {
             const { search } = req.query;
             // if there is a search query use this
             if (search) {
-                const memes = yield meme_1.default.find({ title: { $regex: `${search}`, $options: "gi" } })
-                    .populate("author")
-                    .sort({ time: -1 });
+                let memes = [];
+                if (search !== "") {
+                    memes = yield meme_1.default.find({
+                        $or: [{ title: { $regex: `${search}`, $options: "gi" } }],
+                    })
+                        .populate("author")
+                        .sort({ time: -1 });
+                }
+                else {
+                    memes = yield meme_1.default.find({}).lean();
+                }
                 res.status(200).json({ memes });
                 // otherwise this one
             }
             else {
                 meme_1.default.find({})
+                    .lean()
                     .populate("author")
                     .sort({ time: -1 })
                     .exec((err, memes) => {
