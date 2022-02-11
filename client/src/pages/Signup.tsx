@@ -31,6 +31,7 @@ const Signup = () => {
 
   const formBackground = useColorModeValue("gray.50", "gray.700");
   const formVariant = useColorModeValue("outline", "filled");
+  const formHeadingColor = useColorModeValue("teal.500", "teal.200");
 
   // for handling input change
   function HandleInputChange(event: ChangeEvent<HTMLInputElement>) {
@@ -96,9 +97,22 @@ const Signup = () => {
 
   return (
     <div className="signup_page">
-      <Container maxW="400px" marginY="50" display="flex" justifyContent="center" alignItems="center">
-        <Flex w="100%" boxShadow="lg" direction="column" background={formBackground} p={[7, 10, 10, 10]} rounded={5}>
-          <Heading color="teal" textAlign="center" mb={5} fontSize="xx-large">
+      <Container
+        maxW="450px"
+        marginY="50"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Flex
+          w="100%"
+          boxShadow="lg"
+          direction="column"
+          background={formBackground}
+          p={[7, 10, 10, 10]}
+          rounded={5}
+        >
+          <Heading color={formHeadingColor} textAlign="center" mb={5} fontSize="xx-large">
             Sign up
           </Heading>
 
@@ -163,7 +177,12 @@ const Signup = () => {
             />
           </InputGroup>
 
-          <Button disabled={pending} onClick={ValidateInputInfos} fontWeight="normal" colorScheme="teal">
+          <Button
+            disabled={pending}
+            onClick={ValidateInputInfos}
+            fontWeight="normal"
+            colorScheme="teal"
+          >
             Sign up
           </Button>
         </Flex>

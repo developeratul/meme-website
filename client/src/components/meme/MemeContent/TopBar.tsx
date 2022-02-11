@@ -16,7 +16,7 @@ interface Props {
 
 // this is the top bar which is containing the like button and user related info's
 const TopBar = ({ meme, setMeme }: Props) => {
-  const topBarBg = useColorModeValue("gray.100", "gray.900");
+  const topBarBg = useColorModeValue("gray.300", "gray.900");
   const history = useHistory();
   const toast = useToast();
   const {

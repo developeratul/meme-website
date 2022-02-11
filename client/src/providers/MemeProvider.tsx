@@ -1,4 +1,5 @@
 import React, { createContext, useReducer } from "react";
+import { Meme } from "../interfaces";
 
 const initialState: any[] = [];
 
@@ -23,7 +24,7 @@ const reducer = (state = initialState, action: any) => {
 };
 
 interface MemeContextInterface {
-  state: any[];
+  state: Meme[];
   dispatch: React.Dispatch<any>;
 }
 

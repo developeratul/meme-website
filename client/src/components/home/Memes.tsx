@@ -11,6 +11,7 @@ import {
   Avatar,
 } from "@chakra-ui/react";
 import { Spinner } from "@chakra-ui/spinner";
+import { Button } from "@chakra-ui/button";
 import { Link } from "react-router-dom";
 
 import { useContext, useEffect, useState } from "react";
@@ -27,8 +28,24 @@ const Memes = () => {
     state: { user, isAuthenticated },
   } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
+  const [currentMemes, setCurrentMemes] = useState<any[]>([]);
+  const indexOfLastMeme = currentMemes.length;
+  const totalMemes = memes.length;
+
   const boxBackground = useColorModeValue("gray.50", "gray.700");
   const toast = useToast();
+
+  // I will be fetching 18 memes at a time
+  function loadNextMemes() {
+    const memesLeft = totalMemes - currentMemes.length;
+    let nextMemes: any[] = [];
+    if (memesLeft < 18) {
+      nextMemes = memes.slice(indexOfLastMeme, totalMemes + memesLeft);
+    } else {
+      nextMemes = memes.slice(indexOfLastMeme, currentMemes.length + 18);
+    }
+    setCurrentMemes(() => [...currentMemes, ...nextMemes]);
+  }
 
   // for fetching the data of memes
   async function fetchMemes(abortController: AbortController) {
@@ -43,6 +60,7 @@ const Memes = () => {
       if (res.status === 200) {
         setLoading(false);
         dispatch({ type: "GET_MEMES", payload: body.memes });
+        setCurrentMemes(body.memes.slice(0, body.memes.length < 18 ? body.memes.length : 18));
       }
     } catch (err: any) {
       console.log(err.message || err);
@@ -103,6 +121,12 @@ const Memes = () => {
     return () => abortController.abort();
   }, []);
 
+  useEffect(() => {
+    if (!loading) {
+      setCurrentMemes(memes.slice(0, memes.length < 18 ? memes.length : 18));
+    }
+  }, [memes]);
+
   if (loading) {
     return (
       <Flex align="center" w="full" h="full" justify="center" py={20}>
@@ -113,9 +137,9 @@ const Memes = () => {
 
   return (
     <Container maxW="container.lg" pb={10}>
-      <SimpleGrid w="full" gap={3} columns={[1, 1, 2, 3]}>
-        {memes.length > 0 ? (
-          memes.map((meme: Meme) => {
+      <SimpleGrid w="full" gap={3} columns={currentMemes.length === 0 ? 1 : [1, 1, 2, 3]}>
+        {currentMemes.length > 0 ? (
+          currentMemes.map((meme: Meme) => {
             const time = new Date(+meme.time).toDateString();
 
             return (
@@ -220,6 +244,13 @@ const Memes = () => {
           </Heading>
         )}
       </SimpleGrid>
+      {totalMemes !== currentMemes.length && currentMemes.length !== 0 && (
+        <Flex py={5} justify="center" align="center">
+          <Button minW={200} colorScheme={"teal"} onClick={loadNextMemes}>
+            Load more
+          </Button>
+        </Flex>
+      )}
     </Container>
   );
 };

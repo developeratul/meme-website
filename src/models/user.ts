@@ -10,7 +10,7 @@ export interface UserInterface extends mongoose.Document {
   time: number;
   photoUrl: string;
   photoId: string;
-  generateWebToken: () => "";
+  generateWebToken: () => Promise<string>;
 }
 
 const dataSchema = new mongoose.Schema({

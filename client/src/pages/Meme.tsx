@@ -2,6 +2,7 @@ import { Container, Flex, Grid, Heading } from "@chakra-ui/layout";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import useToast from "../components/hooks/useToast";
+import { Spinner } from "@chakra-ui/spinner";
 
 // interfaces
 import { Meme } from "../interfaces";
@@ -60,10 +61,8 @@ const SingleMemePage = () => {
 
   if (loading && !meme) {
     return (
-      <Flex py={20} justifyContent="center">
-        <Heading fontWeight="normal" fontSize="2xl">
-          Loading ...
-        </Heading>
+      <Flex w="full" py={50} h="full" justify="center" align={"center"}>
+        <Spinner />
       </Flex>
     );
   }

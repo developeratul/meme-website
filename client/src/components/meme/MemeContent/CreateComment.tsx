@@ -23,7 +23,7 @@ const CreateComment = ({ meme, setMeme }: Props) => {
 
   const toast = useToast();
 
-  const topBarBg = useColorModeValue("gray.100", "gray.900");
+  const topBarBg = useColorModeValue("gray.300", "gray.900");
   const inputBackground = useColorModeValue("gray.200", "gray.800");
   const inputVariant = useColorModeValue("outline", "filled");
 

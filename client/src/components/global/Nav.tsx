@@ -96,7 +96,6 @@ const Nav = () => {
               colorScheme="teal"
               onClick={toggleColorMode}
               aria-label="Change theme"
-              borderRadius="100%"
               icon={
                 colorMode === "dark" ? (
                   <i className="fas fa-sun"></i>
