@@ -54,6 +54,7 @@ function getMemes(req, res, next) {
                     memes = yield meme_1.default.find({
                         $or: [{ title: { $regex: `${search}`, $options: "gi" } }],
                     })
+                        .lean()
                         .populate("author")
                         .sort({ time: -1 });
                 }

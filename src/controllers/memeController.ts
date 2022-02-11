@@ -45,6 +45,7 @@ async function getMemes(req: Request, res: Response, next: NextFunction) {
         memes = await Meme.find({
           $or: [{ title: { $regex: `${search}`, $options: "gi" } }],
         })
+          .lean()
           .populate("author")
           .sort({ time: -1 });
       } else {
