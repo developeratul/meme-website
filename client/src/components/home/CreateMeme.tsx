@@ -1,16 +1,16 @@
 import {
-  Button,
   Box,
+  Button,
+  Image,
+  Input,
   Modal,
-  ModalOverlay,
-  ModalHeader,
   ModalBody,
+  ModalCloseButton,
   ModalContent,
   ModalFooter,
-  ModalCloseButton,
-  Input,
+  ModalHeader,
+  ModalOverlay,
   useDisclosure,
-  Image,
 } from "@chakra-ui/react";
 import { ChangeEvent, useContext, useState } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
@@ -102,7 +102,7 @@ const CreateMeme = () => {
         Post Meme
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal scrollBehavior="inside" size="lg" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay backdropFilter="blur(10px)" />
         <ModalContent>
           <ModalHeader>Post a Meme</ModalHeader>

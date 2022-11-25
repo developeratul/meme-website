@@ -1,10 +1,10 @@
-import { Grid, Container } from "@chakra-ui/react";
+import { Container, Grid } from "@chakra-ui/react";
 import { useEffect } from "react";
 
 // components
 import CreateMeme from "../components/home/CreateMeme";
-import SearchMeme from "../components/home/SearchMeme";
 import Memes from "../components/home/Memes";
+import SearchMeme from "../components/home/SearchMeme";
 
 // the home page which will showup a search bar and all the memes which were posted
 const Home = () => {
@@ -15,7 +15,7 @@ const Home = () => {
   return (
     <>
       {/* the top bar containing the search bar and create meme button and the modal */}
-      <Container maxW="container.lg" pt={10} pb={20}>
+      <Container maxW="container.xl" pt={10} pb={20}>
         <Grid
           gridColumnGap={["0", "1.5", "1.5", "1.5"]}
           templateRows={["1fr 1fr", "0", "0", "0"]}

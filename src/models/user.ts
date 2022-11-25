@@ -1,23 +1,28 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { MemeInterface } from "./meme";
 
 export interface UserInterface extends mongoose.Document {
   name: string;
   email: string;
   password: string;
   portfolio: string;
+  role: "user" | "admin";
   time: number;
   photoUrl: string;
   photoId: string;
+  memes: MemeInterface[];
+  tokens: { token: string }[];
   generateWebToken: () => Promise<string>;
 }
 
-const dataSchema = new mongoose.Schema({
+const dataSchema = new mongoose.Schema<UserInterface>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true, trim: true },
   portfolio: { type: String, required: true },
+  role: { type: String, required: true, default: "user" },
   time: { type: Number, required: true, default: Date.now() },
   photoUrl: { type: String },
   photoId: { type: String },

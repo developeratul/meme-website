@@ -6,6 +6,7 @@ export interface User {
   portfolio: string;
   time: number;
   memes: Meme[];
+  role: "admin" | "user";
   photoUrl: string;
   photoId: string;
 }

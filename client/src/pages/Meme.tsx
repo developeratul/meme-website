@@ -1,15 +1,15 @@
-import { Container, Flex, Grid, Heading } from "@chakra-ui/layout";
+import { Container, Flex, Grid } from "@chakra-ui/layout";
+import { Spinner } from "@chakra-ui/spinner";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import useToast from "../components/hooks/useToast";
-import { Spinner } from "@chakra-ui/spinner";
 
 // interfaces
 import { Meme } from "../interfaces";
 
 // components
-import MemeImage from "../components/meme/MemeImage";
 import MemeContent from "../components/meme/MemeContent/index";
+import MemeImage from "../components/meme/MemeImage";
 
 interface Params {
   id: string;
@@ -34,7 +34,7 @@ const SingleMemePage = () => {
       const body = await res.json();
 
       if (res.ok) {
-        document.title = `MEME-Site: ${body.meme.author.name} / ${body.meme.title}`;
+        document.title = `MEME-Site - ${body.meme.author.name}: ${body.meme.title}`;
         setMeme(body.meme);
         setLoading(false);
       } else if (res.status === 404) {
@@ -68,8 +68,15 @@ const SingleMemePage = () => {
   }
 
   return (
-    <Container maxW="container.lg" py={[5, 5, 10, 10]}>
-      <Grid boxShadow="lg" rounded={5} overflow="hidden" templateColumns="repeat(12, 1fr)">
+    <Container maxW="container.xl" py={[5, 5, 10, 10]}>
+      <Grid
+        minH={{ base: "full", md: 800 }}
+        boxShadow="lg"
+        borderWidth="thin"
+        rounded={5}
+        overflow="hidden"
+        templateColumns="repeat(12, 1fr)"
+      >
         <MemeImage meme={meme} />
         <MemeContent meme={meme} setMeme={setMeme} />
       </Grid>

@@ -29,6 +29,7 @@ const Profile = () => {
     memes: [],
     photoUrl: "",
     photoId: "",
+    role: "user",
   });
   const {
     state: { user: authUser, isAuthenticated },
@@ -116,6 +117,7 @@ const Profile = () => {
 
     try {
       if (confirmed) {
+        toast({ status: "info", description: "Deleting the meme" });
         const res = await fetch("/meme/delete_meme", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -213,9 +215,9 @@ const Profile = () => {
       </Heading>
 
       {/* the memes grid which will contain the memes posted by the user */}
-      <SimpleGrid columns={[1, 1, 2, 3]} gap={3}>
-        {user.memes.length > 0 ? (
-          user.memes.map((meme: Meme) => {
+      {!!user.memes.length ? (
+        <SimpleGrid columns={[1, 1, 2, 3]} gap={3}>
+          {user.memes.map((meme: Meme) => {
             const time = new Date(+meme.time).toDateString();
 
             return (
@@ -287,7 +289,7 @@ const Profile = () => {
                   </Box>
 
                   {/* if the visiting user is the author of this profile, instead of the like button, this menu will be shown */}
-                  {user._id === (authUser && authUser._id) ? (
+                  {user._id === (authUser && authUser._id) || authUser?.role === "admin" ? (
                     <Menu>
                       <MenuButton
                         as={IconButton}
@@ -341,13 +343,20 @@ const Profile = () => {
                 </Flex>
               </Box>
             );
-          })
-        ) : (
-          <Heading textAlign="center" fontSize="2xl" fontWeight="md" color="gray.500">
-            No Memes to show
-          </Heading>
-        )}
-      </SimpleGrid>
+          })}
+        </SimpleGrid>
+      ) : (
+        <Heading
+          w="full"
+          py={100}
+          textAlign="center"
+          fontSize="2xl"
+          fontWeight="md"
+          color="gray.500"
+        >
+          No Memes to show
+        </Heading>
+      )}
     </Container>
   );
 };

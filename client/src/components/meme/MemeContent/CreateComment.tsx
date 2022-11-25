@@ -73,7 +73,7 @@ const CreateComment = ({ meme, setMeme }: Props) => {
             disabled={!input.match(atLeastContainsOneChar) || pending}
             aria-label="comment button"
             colorScheme="teal"
-            icon={<i className="fas fa-search"></i>}
+            icon={<i className="fas fa-plus"></i>}
           />
         </InputRightElement>
       </InputGroup>

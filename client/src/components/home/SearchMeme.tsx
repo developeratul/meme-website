@@ -1,9 +1,9 @@
 import {
+  Box,
+  IconButton,
   Input,
   InputGroup,
   InputRightElement,
-  IconButton,
-  Box,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useContext, useState } from "react";
