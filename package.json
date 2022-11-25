@@ -4,9 +4,7 @@
   "description": "A simple meme wesbite created using the MERN stacl",
   "main": "src/index.ts",
   "engines": {
-    "node": "16.0.0",
-    "yarn": "1.22.0",
-    "npm": "please-use-yarn"
+    "node": "16.0.0"
   },
   "scripts": {
     "start": "node dist/index.js",
